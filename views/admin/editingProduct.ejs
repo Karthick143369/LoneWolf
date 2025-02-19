@@ -1,0 +1,285 @@
+
+<!-- Bootstrap CSS -->
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<!-- Cropper CSS for image cropping -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css" />
+<style>
+    .img-thumbnail {
+    width: 200px; 
+    height: auto;
+}
+</style>
+</head>
+
+<body>
+    <div class="container mt-5">
+        <h1 class="mb-4">Edit Product</h1>
+        <div class="alert alert-danger" style="display: none;"></div>
+
+        <form action="/admin/product/editProduct/<%= product._id %>" method="post" id="edit-form"
+            enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="productName">Product Name</label>
+                <input type="text" class="form-control" id="productName" placeholder="Enter product name"
+                    name="productName" value="<%= product.productName %>" required>
+            </div>
+            <div class="form-group">
+                <label for="productPrice">Product Price</label>
+                <input type="number" class="form-control" id="productPrice" placeholder="Enter product price"
+                    name="price"  value="<%= product.price %>"  required>
+            </div>
+            <div class="form-group">
+                <label for="productStock">Stock</label>
+                <input type="number" class="form-control" id="productStock" placeholder="Enter stock quantity"
+                    name="stock" value="<%= product.stock %>"  required>
+            </div>
+            <div class="form-group">
+              <label for="FitType">Fit Type</label>
+              <input type="text" class="form-control" id="FitType" placeholder="Enter product FitType"
+                  name="FitType" value="<%= product.FitType %>" required>
+              
+              <span></span>
+          </div>
+        
+          <div class="form-group">
+              <label for="colour">Colour</label>
+              <input type="text" class="form-control" id="colour" placeholder="Enter product Colour"
+                  name="colour" value="<%= product.colour %>" required>
+              
+              <span></span>
+          </div>
+        
+          <div class="form-group">
+              <label for="size">Size</label>
+              <input class="form-control" id="size" placeholder="Enter product size"
+                  name="size" value="<%= product.size %>" required>
+              
+              <span></span>
+          </div>
+          <div class="form-group">
+              <label for="Description">Description</label>
+              <input type="text" class="form-control" id="Description" placeholder="Enter product Description"
+                  name="Description" value="<%= product.Description %>" required>
+         
+              <span></span>
+          </div>
+            <div class="form-group">
+                <label for="productBrand">Brand</label>
+                <select class="form-control" id="productBrand" name="brand" required>
+                    <% brands.forEach(brand => { %>
+                    <option value="<%= brand._id %>" <% if (brand._id.toString() === product.brand.toString()) { %> selected <% } %>><%= brand.name %></option>
+                    <% }) %>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="productCategory">Category</label>
+                <select class="form-control" id="productCategory" name="category" required>
+                    <% categories.forEach(category => { %>
+                    <option value="<%= category._id %>" <% if (category._id.toString() == product.category.toString()) { %> selected <% } %>><%= category.name %></option>
+                    <% }) %>
+                </select>
+            </div>
+
+            <h2>Current Images</h2>
+            <div class="current-images">
+                <% product.images.forEach((image, index) => { %>
+                <div class="current-image-container">
+                    <img src="<%= image %>" alt="Product Image <%= index + 1 %>" class="img-thumbnail">
+                    <button type="button" class="btn btn-danger mt-2 delete-image-btn" data-image-index="<%= index %>">Delete Image</button>
+                </div>
+                <% }) %>
+            </div>
+
+            <h2>Select New Images (Optional)</h2>
+            <label for="newImages">New Images:</label><br />
+            <input type="file" id="newImages" name="images" accept="image/*" multiple
+                onchange="displaySelectedImages(this)">
+            <div class="selected-images-container" id="selectedImagesContainer"></div>
+            <span class="error-message" id="images-error" style="color: red"></span>
+
+            <button type="submit" class="btn btn-primary d-block mt-3">Update Product</button>
+        </form>
+    </div>
+
+    <!-- Your scripts -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.2/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+    <!-- <script src="/script/product.js"></script> -->
+
+  
+     <script>
+        document.getElementById('edit-form').addEventListener('submit', async (event) => {
+            event.preventDefault(); 
+    
+            const formData = new FormData(event.target); 
+    
+            try {
+                const response = await fetch(event.target.action, {
+                    method: 'POST',
+                    body: formData,
+                });
+    
+                if (response.ok) {
+                   
+                    const result = await response.json();
+                    if (result.success) {
+                        window.location.href = '/admin/product/productList'; 
+                    } else {
+                        displayErrors(result.errors); 
+                    }
+                } else {
+                    const result = await response.json();
+                    displayErrors(result.errors); // Display errors if present
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An unexpected error occurred');
+            }
+        });
+    
+        function displayErrors(errors) {
+            const errorContainer = document.querySelector('.alert-danger');
+            errorContainer.innerHTML = ''; // Clear previous errors
+    
+            if (errors && errors.length > 0) {
+                errors.forEach(error => {
+                    const errorItem = document.createElement('li');
+                    errorItem.textContent = error;
+                    errorContainer.appendChild(errorItem);
+                });
+    
+                errorContainer.style.display = 'block'; // Show the error container
+            }
+        }
+    </script> 
+    
+    <script>
+        // Function to display selected images and handle cropping
+        function displaySelectedImages(input) {
+            const selectedImagesContainer = document.getElementById("selectedImagesContainer");
+            selectedImagesContainer.innerHTML = "";
+
+            for (let i = 0; i < input.files.length; i++) {
+                const file = input.files[i];
+                const reader = new FileReader();
+                const cropContainer = document.createElement("div");
+                cropContainer.classList.add("image-crop-container");
+                cropContainer.innerHTML = `
+                    <div class="image-container">
+                        <img id="image${i}" src="" alt="Select an image to crop" class="img-thumbnail">
+                    </div>
+                    <button class="crop-button" id="cropButton${i}">Crop Image ${i + 1}</button>
+                `;
+                selectedImagesContainer.appendChild(cropContainer);
+
+                const image = cropContainer.querySelector(`#image${i}`);
+                const cropButton = cropContainer.querySelector(`#cropButton${i}`);
+
+                reader.onload = () => {
+                    image.src = reader.result;
+                    let cropper = new Cropper(image, {
+                        aspectRatio: 1,
+                        viewMode: 1,
+                    });
+
+                    cropButton.addEventListener("click", (event) => {
+                        event.preventDefault();
+                        if (cropper) {
+                            const canvas = cropper.getCroppedCanvas({
+                                width: 800, // Increased size for better quality
+                                height: 800, // Increased size for better quality
+                                imageSmoothingEnabled: true,
+                                imageSmoothingQuality: 'high',
+                            });
+                            const croppedImageDataURL = canvas.toDataURL('image/jpeg', 1.0); // Set quality to maximum
+                            image.src = croppedImageDataURL;
+                            const croppedImageFile = dataURLToFile(croppedImageDataURL, file.name);
+                            const currentFiles = Array.from(input.files);
+                            currentFiles[i] = croppedImageFile;
+
+                            const newFileList = createFileList(currentFiles);
+                            input.files = newFileList;
+                            cropper.destroy();
+                            cropper = null;
+                        } else {
+                            cropper = new Cropper(image, {
+                                aspectRatio: 1,
+                                viewMode: 1,
+                            });
+                        }
+                    });
+                };
+
+                if (file) {
+                    reader.readAsDataURL(file);
+                }
+            }
+        }
+
+        // Function to convert dataURL to File
+        function dataURLToFile(dataURL, fileName) {
+            const arr = dataURL.split(',');
+            const mime = arr[0].match(/:(.*?);/)[1];
+            const bstr = atob(arr[1]);
+            let n = bstr.length;
+            const u8arr = new Uint8Array(n);
+
+            while (n--) {
+                u8arr[n] = bstr.charCodeAt(n);
+            }
+
+            return new File([u8arr], fileName, { type: mime });
+        }
+
+        // Function to create a FileList from an array of Files
+        function createFileList(files) {
+            const fileList = new DataTransfer();
+
+            files.forEach((file) => {
+                fileList.items.add(file);
+            });
+
+            return fileList.files;
+        }
+    </script>
+
+    <!-- delete the image  -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+        // Bind event listeners to delete buttons
+        document.querySelectorAll('.delete-image-btn').forEach(button => {
+            button.addEventListener('click', async function() {
+                const imageIndex = parseInt(this.getAttribute('data-image-index')); // Get the index from the button
+                const images = document.querySelectorAll('.current-image-container img'); // Get all images
+                const imageSrc = images[imageIndex].src; // Get the src of the image at the index
+    
+                try {
+                    const response = await fetch(`/admin/product/deleteImage/<%= product._id %>`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ image: imageSrc.replace(window.location.origin, '') })
+                    });
+    
+                    if (response.ok) {
+                        location.reload(); // Reload page after successful deletion
+                    } else {
+                        alert('Failed to delete image');
+                    }
+                } catch (err) {
+                    console.error('Error:', err);
+                    alert('An unexpected error occurred');
+                }
+            });
+        });
+    });
+    
+    </script>
+</body>
+
+</html>

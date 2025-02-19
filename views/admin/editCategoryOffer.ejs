@@ -1,0 +1,45 @@
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+   
+    <div class="container mt-5">
+        <h1 class="mb-4">Edit Category Offer</h1>
+        <form id="categoryOfferEdit" action="/admin/categoryOffer/update/<%= categoryOffer._id %>" method="POST">
+            <div class="form-group">
+                <label for="categoryId">Category</label>
+                <select class="form-control" id="categoryId" name="categoryId" required>
+                    <option value="" disabled>Please select a category</option>
+                    <% if (categories && categories.length > 0) { %>
+                        <% categories.forEach(category => { %>
+                            <option value="<%= category._id %>" <%= categoryOffer && categoryOffer.categoryId && categoryOffer.categoryId.equals(category._id) ? 'selected' : '' %>><%= category.name %></option>
+                        <% }); %>
+                    <% } else { %>
+                        <option value="">No categories available</option>
+                    <% } %>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="offerName">Offer Name</label>
+                <input type="text" class="form-control" id="offerName" name="offerName" value="<%= categoryOffer ? categoryOffer.offerName : '' %>" required>
+            </div>
+            <div class="form-group">
+                <label for="discountPercentage">Discount Percentage</label>
+                <input type="number" class="form-control" id="discountPercentage" name="discountPercentage" value="<%= categoryOffer ? categoryOffer.discountPercentage : '' %>" required>
+            </div>
+            <div class="form-group">
+                <label for="startDate">Start Date</label>
+                <input type="date" class="form-control" id="startDate" name="startDate" value="<%= categoryOffer ? categoryOffer.startDate.toISOString().substring(0, 10) : '' %>" required>
+            </div>
+            <div class="form-group">
+                <label for="endDate">End Date</label>
+                <input type="date" class="form-control" id="endDate" name="endDate" value="<%= categoryOffer ? categoryOffer.endDate.toISOString().substring(0, 10) : '' %>" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Update Offer</button>
+        </form>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

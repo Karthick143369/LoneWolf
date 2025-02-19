@@ -1,0 +1,725 @@
+<%- include('../layouts/user/header',{title:"user-orders"}) %>
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+    :root {
+        --luxury-beige: #DDD0C8;
+        --dark-grey: #323232;
+        --light-beige: #F5F0ED;
+        --medium-beige: #E8E0DA;
+        --gold: #B8976B;
+    }
+
+    body {
+        font-family: 'Montserrat', sans-serif;
+    }
+
+    .orders-container {
+        background: var(--light-beige);
+        min-height: 100vh;
+    }
+
+    .page-title {
+        color: var(--dark-grey);
+        font-weight: 300;
+        margin-bottom: 2rem;
+        padding-bottom: 0.8rem;
+        border-bottom: 1px solid var(--gold);
+        display: inline-block;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+    }
+
+    .order-table {
+        background: white;
+        border-radius: 0;
+        box-shadow: 0 20px 40px rgba(50, 50, 50, 0.1);
+        overflow: hidden;
+        border: 1px solid var(--luxury-beige);
+    }
+
+    .table {
+        margin-bottom: 0;
+        width: 100%;
+    }
+
+    .table thead {
+        border-bottom: 2px solid var(--gold);
+    }
+
+    .table thead th {
+        background: var(--dark-grey);
+        color: var(--luxury-beige);
+        border: none;
+        padding: 1.5rem 1.2rem;
+        font-weight: 300;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        border-right: 1px solid rgba(221, 208, 200, 0.1);
+    }
+
+    .table thead th:last-child {
+        border-right: none;
+    }
+
+    .table tbody tr {
+        border-bottom: 1px solid var(--light-beige);
+        transition: all 0.3s ease;
+    }
+
+    .table tbody tr:hover {
+        background: var(--light-beige);
+    }
+
+    .table td {
+        vertical-align: middle;
+        padding: 1.2rem;
+        border-right: 1px solid var(--light-beige);
+        font-weight: 300;
+        color: var(--dark-grey);
+    }
+
+    .table td:last-child {
+        border-right: none;
+    }
+
+    .product-cell {
+        display: flex;
+        align-items: center;
+        gap: 1.2rem;
+    }
+
+    .product-image {
+        width: 70px;
+        height: 70px;
+        object-fit: cover;
+        border-radius: 0;
+        border: 1px solid var(--luxury-beige);
+        transition: all 0.3s ease;
+    }
+
+    .product-image:hover {
+        transform: scale(1.05);
+    }
+
+    .status-badge {
+        padding: 0.6rem 1.2rem;
+        border-radius: 0;
+        font-size: 0.8rem;
+        font-weight: 400;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        border: 1px solid currentColor;
+    }
+
+    .status-delivered { 
+        background: transparent; 
+        color: var(--dark-grey); 
+        border-color: var(--dark-grey);
+    }
+    
+    .status-cancelled { 
+        background: transparent; 
+        color: #8B0000; 
+        border-color: #8B0000;
+    }
+    
+    .status-pending { 
+        background: transparent; 
+        color: var(--gold); 
+        border-color: var(--gold);
+        padding: 3px;
+    }
+    
+    .status-return { 
+        background: transparent; 
+        color: var(--dark-grey); 
+        border-color: var(--dark-grey);
+    }
+
+    .btn-action {
+        padding: 0.6rem 1.5rem;
+        border-radius: 0;
+        font-size: 0.8rem;
+        transition: all 0.3s ease;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        font-weight: 400;
+        margin: 0 0.3rem;
+    }
+
+    .btn-return, .btn-view {
+        background: var(--dark-grey);
+        color: var(--luxury-beige);
+        border: 1px solid var(--dark-grey);
+        flex-direction: column;
+        gap: 2px;
+    }
+
+
+    
+
+    .btn-return:hover, .btn-view:hover {
+        background: transparent;
+        color: var(--dark-grey);
+    }
+
+    .btn-cancel, .btn-review {
+        background: transparent;
+        color: var(--dark-grey);
+        border: 1px solid var(--dark-grey);
+    }
+
+    .btn-cancel:hover, .btn-review:hover {
+        background: var(--dark-grey);
+        color: var(--luxury-beige);
+    }
+
+    .invoice-link {
+        color: var(--dark-grey);
+        text-decoration: none;
+        font-weight: 300;
+        letter-spacing: 1px;
+        position: relative;
+        padding-bottom: 2px;
+    }
+
+    .invoice-link::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        height: 1px;
+        background: var(--dark-grey);
+        transition: width 0.3s ease;
+    }
+
+    .invoice-link:hover::after {
+        width: 100%;
+    }
+
+    .no-orders {
+        text-align: center;
+        padding: 5rem 2rem;
+        background: var(--light-beige);
+    }
+
+    .no-orders h4 {
+        color: var(--dark-grey);
+        font-weight: 300;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        margin-bottom: 1rem;
+    }
+
+    .no-orders p {
+        color: var(--dark-grey);
+        font-weight: 300;
+        letter-spacing: 1px;
+    }
+
+    /* Footer styling */
+    .table tfoot {
+        background: var(--light-beige);
+        border-top: 2px solid var(--gold);
+
+    }
+
+    .table tfoot td {
+        padding: 1.2rem;
+        font-weight: 300;
+        letter-spacing: 1px;
+        color: var(--dark-grey);
+        width: 100%;
+    }
+    
+    .button-container {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        align-items: center;
+        min-width: 120px; /* Ensure consistent width */
+    }
+
+    .action-cell {
+        min-width: 150px; /* Ensure consistent width for action buttons */
+    }
+
+    /* Status text styles */
+    .status-text {
+        display: inline-block;
+        padding: 0.4rem 0.8rem;
+        font-size: 0.8rem;
+        letter-spacing: 1px;
+    }
+
+    .text-muted {
+        color: #6c757d !important;
+    }
+
+    .text-danger {
+        color: #dc3545 !important;
+    }
+
+    /* Modal improvements */
+    .modal-content {
+        border-radius: 0;
+        border: 1px solid var(--luxury-beige);
+    }
+
+    .modal-header {
+        background: var(--dark-grey);
+        color: var(--luxury-beige);
+        border-bottom: 2px solid var(--gold);
+    }
+
+    .modal-footer {
+        border-top: 1px solid var(--luxury-beige);
+    }
+
+    /* Form control styling */
+    .form-control {
+        border-radius: 0;
+        border: 1px solid var(--luxury-beige);
+    }
+
+    .form-control:focus {
+        border-color: var(--gold);
+        box-shadow: none;
+    }
+
+    /* Fix table cell padding */
+    .table td {
+        padding: 1rem;
+        vertical-align: middle;
+    }
+</style>
+<div class="orders-container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="page-title">My Orders</h2>
+        <% if (failedOrder && failedOrder.length > 0) { %>
+            <a href="/failed/payment" class="btn btn-danger btn-action">View Failed Payments</a>
+        <% } %>
+    </div>
+
+    <div class="order-table">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                            <th>Status</th>
+                            <th>Payment</th>
+                            <th>Actions</th>
+                            <th>Details</th>
+                            <th>Invoice</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% if (order && order.length > 0) { %>
+                            <% order.forEach(orderItem => { %>
+                                <% orderItem.productItems.forEach(product => { %>
+                                    <tr>
+                                        <td>
+                                            <div class="product-cell">
+                                                <img src="<%= product?.productId?.images[0] %>" 
+                                                     alt="Product" 
+                                                     class="product-image">
+                                                <span><%= product?.productName %></span>
+                                            </div>
+                                        </td>
+                                        <td><%= product?.quantity %></td>
+                                        <td>₹<%= product?.total %></td>
+                                        <td>
+                                            <span class="status-badge 
+                                                <%= product?.status === 'Delivered' ? 'status-delivered' : 
+                                                   product?.status === 'Cancelled' ? 'status-cancelled' : 
+                                                   product?.status.includes('Return') ? 'status-return' : 
+                                                   'status-pending' %>">
+                                                <%= product?.status %>
+                                            </span>
+                                        </td>
+                                        <td><%= orderItem.paymentMethod %></td>
+                                             <td>
+                                        <% if(orderItem){%>
+                                            <% if (product.status==='Delivered' ) { %>
+                                                <div class="button-container">
+                                                <button class="btn-action btn-return btn-sm" id="returnBtn"
+                                                    onclick="showReturnModal('<%= orderItem._id %>', '<%= product.productId._id %>')">Return</button>
+
+                                        <!-- Return Modal -->
+                                        <div class="modal fade" id="returnModal" tabindex="-1" aria-labelledby="returnModalLabel"
+                                            aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <form id="returnForm">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="returnModalLabel">Return Product</h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <input type="hidden" name="orderId" id="orderId">
+                                                            <input type="hidden" name="productId" id="productId">
+                                                            <div class="form-group">
+                                                                <label for="returnReason">Reason for Return</label>
+                                                                <textarea class="form-control" id="returnReason" name="returnReason" rows="3"
+                                                                    required></textarea>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                            <button type="submit" class="btn btn-primary">Submit Return Request</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <% } else if (['Cancelled', 'Return Requested', 'return request accepted' 
+                                            , 'return request rejected','product returned'].includes(product.status)) { %>
+                                            <span>
+                                                <% if (product.status==='Cancelled' ) { %>
+                                                <span class="text-muted">Cancelled</span>
+                                                <% } else if(product.status==='Return Requested' ) { %>
+                                                <span class="text-danger">Return Requested</span>
+                                                <% } else if(product.status==='return request accepted') { %>
+                                                <span class="text-danger">Return Request Accepted</span>
+                                                <% } else if(product.status==='product returned') { %>
+                                                <span class="text-danger">Product Returned </span>
+                                                <% } else if(product.status==='return request rejected' ) { %>
+                                                        <span class="text-danger">Return Request Rejected</span>
+                                                <% } %>
+                                            </span>
+                                        <% } else { %>
+                                            <button
+                                                onclick="cancelProduct('<%= orderItem._id %>', '<%= product.productId._id%>')"
+                                                id="cancelBtn_<%= orderItem._id %>_<%= product.productId._id %>"
+                                                class="btn-action btn-cancel btn-sm">Cancel</button>
+                                        <% } %>
+                                        <% if(product.status==='Delivered' ){ %>
+                                            <button class="btn-action btn-review btn-sm" data-toggle="modal" data-target="#reviewModal">review  product</button>
+                                        </div>
+                                        <!-- Modal -->
+                                        <div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="reviewModalLabel"
+                                            aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title"
+                                                            id="reviewModalLabel">
+                                                            Review and Rate the
+                                                            Product</h5>
+                                                        <button type="button"
+                                                            class="close"
+                                                            data-dismiss="modal"
+                                                            aria-label="Close">
+                                                            <span
+                                                                aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <form id="reviewForm">
+                                                            <div class="form-group">
+                                                                <label for="rating">Rating</label>
+                                                                <select class="form-control" id="rating"
+                                                                    name="rating">
+                                                                    <option value="1">1- Very Bad </option>
+                                                                    <option
+                                                                        value="2">2
+                                                                        - Bad
+                                                                    </option>
+                                                                    <option
+                                                                        value="3">3
+                                                                        - Average
+                                                                    </option>
+                                                                    <option
+                                                                        value="4">4
+                                                                        - Good
+                                                                    </option>
+                                                                    <option value="5">5- Excellent
+                                                                    </option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label
+                                                                    for="review">Review</label>
+                                                                <textarea
+                                                                    class="form-control"
+                                                                    id="review"
+                                                                    name="review"
+                                                                    rows="3"></textarea>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button"
+                                                            class="btn btn-secondary"
+                                                            data-dismiss="modal">Close</button>
+                                                        <button type="button"
+                                                            class="btn btn-primary"
+                                                            id="submitReview"
+                                                            onclick="reviewSubmit('<%= product.productId._id %>','<%= orderItem.userId %>')">Submit
+                                                            Review</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <% }else{ %>
+                                        <% } %>
+                                        <% }else{%>
+                                            <p>coupon applied</p>
+                                        <%}%>
+                                    </td>
+                                        </td>
+                                        <td>
+                                            <a href="/orders/<%= orderItem._id %>" class="btn btn-action btn-view">View</a>
+                                        </td>
+                                        <td>
+                                            <% if (product.status !== 'Cancelled' && product.status !== 'product returned') { %>
+                                                <a href="javascript:void(0);" 
+                                                   class="invoice-link"
+                                                   onclick="invoiceDownload('<%= orderItem._id %>', '<%= product.productId._id %>')">
+                                                    Download Invoice
+                                                </a>
+                                            <% } %>
+                                        </td>
+                                    </tr>
+                                <% }); %>
+                            <% }); %>
+                        <% } else { %>
+                            <tr>
+                                <td colspan="8">
+                                    <div class="no-orders">
+                                        <h4>No Orders Found</h4>
+                                        <p>You haven't placed any orders yet.</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    <!-- </div> -->
+</div>
+
+</body>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+<script>
+    async function invoiceDownload(orderId, productId){
+        const url = `/order/downloadInvoice/${orderId}/${productId}`;
+    // window.open(url, '_blank');
+    try {
+        const response =  await fetch(url,{
+            method: 'GET',
+            headers: {
+                'Content-Type':'application/json'
+            },
+
+        })
+        if(response.ok){
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `invoice_${orderId}.pdf`;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            Swal.fire({
+                position: 'bottom',
+                icon: 'success',
+                title: 'Invoice Downloaded Successfully',
+                showConfirmButton: false,
+                timer: 2000
+            });
+        }else{
+            const data = await response.json();
+            Swal.fire({
+                position: 'bottom',
+                icon: 'error',
+                title: data.error || 'Error in downloading',
+                showConfirmButton: false,
+                timer: 2000
+            });
+        }
+    } catch (error) {
+        console.log('some errors occures:',error.message)
+        Swal.fire({
+                    position: 'bottom',
+                    icon: 'Error',
+                    title: data.error || 'error in downloading invoice!',
+                    showConfirmButton: false,
+                    timer: 2000
+                });
+    }
+    }
+</script>
+
+<script>
+    const showReturnModal = (orderId, productId) => {
+        document.getElementById('orderId').value = orderId;
+        document.getElementById('productId').value = productId;
+        $('#returnModal').modal('show');
+    
+
+    document.getElementById('returnForm').addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        const orderId = document.getElementById('orderId').value;
+        const productId = document.getElementById('productId').value;
+        const returnReason = document.getElementById('returnReason').value;
+
+        fetch('/order/return', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ orderId, productId, returnReason })
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    $('#returnModal').modal('hide');
+                    Swal.fire({
+                        position: "top-end",
+                        icon: "success",
+                        title: "Your request submitted.",
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+
+                    window.location.reload();
+                } else {
+                    alert('Failed to submit return request.');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    });
+};
+</script>
+
+
+<!-- // Function to cancel a product using fetch with SweetAlert confirmation -->
+<script>
+    const cancelProduct = (orderId, productId)=>{
+
+        // Show SweetAlert confirmation dialog
+        console.log('order cancel')
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'Do you want to cancel this product?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, cancel it!',
+            cancelButtonText: 'No, keep it'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                fetch(`/order/cancel/${orderId}/${productId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            return response.json().then(data => {
+                                throw new Error(data.message || 'Failed to cancel product.');
+                            });
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log('Product canceled successfully:', data);
+                        const cancelBtn = document.getElementById(`cancelBtn_${orderId}_${productId}`);
+                        if (cancelBtn) {
+                            cancelBtn.style.display = 'none';
+                            window.location.reload();
+
+                        }
+
+                        Swal.fire('Cancelled!', 'Your product has been canceled.', 'success');
+                    })
+                    .catch(error => {
+                        console.error('Error canceling product:', error);
+                        // Handle error: show error message, retry logic, etc.
+                        Swal.fire('Error!', error.message, 'error');
+                    });
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+                // User clicked on "No, keep it" button
+                Swal.fire('Cancelled', 'Your product cancellation request was canceled ', 'info');
+            }
+        });
+    };
+</script>
+
+<!-- review the product -->
+<script>
+    const reviewSubmit = async function (productId, userId) {
+        const rating = document.getElementById('rating').value;
+        const review = document.getElementById('review').value;
+
+        console.log('Rating:', rating);
+        console.log('Review:', review);
+        console.log('product id is:', `${productId}`)
+        console.log('user id is:', `${userId}`)
+
+        try {
+            const response = await fetch('/review', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ rating, review, productId, userId })
+            })
+           
+            const data = await response.json()
+            if(response.ok){
+                console.log('success')
+                $('#reviewModal').modal('hide');
+                Swal.fire({
+                    position: 'bottom',
+                    icon: 'success',
+                    title: data.success || 'review the product!',
+                    showConfirmButton: false,
+                    timer: 2000
+                });
+            
+            } else {
+                console.log('error in review')
+                Swal.fire({
+                    position: 'bottom',
+                    icon: 'error',
+                    title: data.error,
+                    showConfirmButton: false,
+                    timer: 3000
+                });
+            }
+        } catch (error) {
+            console.log('error occurred:',error.message);
+        }
+    }
+
+
+</script>
+
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<%- include('../layouts/user/footer') %>

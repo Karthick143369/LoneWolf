@@ -1,0 +1,311 @@
+<%- include('../layouts/user/header', { title: "LoneWolf" }) %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Addresses</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            display: flex;
+            background: #f8f5f3;
+        }
+
+        .sidebar {
+            width: 280px;
+            background: #323232;
+            padding: 20px;
+            min-height: 100vh;
+            color: #DDD0C8;
+        }
+
+        .profile-section {
+            padding: 20px 0;
+            border-bottom: 1px solid #DDD0C8;
+            margin-bottom: 20px;
+        }
+
+        .profile-pic {
+            width: 60px;
+            height: 60px;
+            background: #DDD0C8;
+            border-radius: 50%;
+            margin-bottom: 15px;
+        }
+
+        .nav-item {
+            padding: 15px 0;
+            color: #DDD0C8;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item:hover {
+            background: rgba(221, 208, 200, 0.1);
+            border-radius: 8px;
+            padding-left: 10px;
+        }
+
+        .nav-item.active {
+            background: #DDD0C8;
+            color: #323232;
+            border-radius: 8px;
+            padding-left: 10px;
+        }
+
+        .sub-nav-item {
+            padding: 12px 0 12px 35px;
+            color: #DDD0C8;
+            text-decoration: none;
+            display: block;
+            transition: all 0.3s ease;
+        }
+
+        .sub-nav-item:hover {
+            background: rgba(221, 208, 200, 0.1);
+        }
+
+        .sub-nav-item.active {
+            color: #DDD0C8;
+            font-weight: bold;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 40px;
+            background: #f8f5f3;
+        }
+
+        .add-address {
+            padding: 20px;
+            background: #DDD0C8;
+            border: none;
+            border-radius: 12px;
+            color: #323232;
+            cursor: pointer;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .add-address:hover {
+            background: #c9bdb5;
+            transform: translateY(-2px);
+        }
+
+        .address-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            position: relative;
+            border: 1px solid #DDD0C8;
+            transition: all 0.3s ease;
+        }
+
+        .address-card:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .address-type {
+            background: #DDD0C8;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            color: #323232;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+
+        .address-details {
+            margin-top: 15px;
+            color: #323232;
+            line-height: 1.6;
+        }
+
+        .menu-dots {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .menu-dots:hover {
+            background: #DDD0C8;
+        }
+
+        .address-menu {
+            position: absolute;
+            top: 60px;
+            right: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border: 1px solid #DDD0C8;
+            overflow: hidden;
+        }
+
+        .address-menu button {
+            display: block;
+            width: 100%;
+            padding: 12px 20px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            text-align: left;
+            color: #323232;
+            transition: all 0.3s ease;
+        }
+
+        .address-menu button:hover {
+            background: #DDD0C8;
+        }
+
+        h1 {
+            color: #323232;
+            margin-bottom: 30px;
+            font-size: 32px;
+        }
+
+        .phone {
+            color: #666;
+            margin-left: 10px;
+        }
+
+        .no-address {
+            text-align: center;
+            color: #666;
+            padding: 40px;
+            background: white;
+            border-radius: 12px;
+            border: 2px dashed #DDD0C8;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="profile-section">
+            <div class="profile-pic"></div>
+            <div>Hello,</div>
+            <div><strong><%= userData.name %></strong></div>
+        </div>
+    
+        <a href="/orders" class="nav-item">
+            <span>📦</span>
+            MY ORDERS
+        </a>
+    
+        <div class="nav-item active">
+            <span>👤</span>
+            ACCOUNT SETTINGS
+        </div>
+        <a href="/profile" class="sub-nav-item">Profile Information</a>
+        <a href="/manage-addresses" class="sub-nav-item active">Manage Addresses</a>
+    
+        <div class="nav-item">
+            <span>📱</span>
+            MY STUFF
+        </div>
+        <a href="/coupons" class="sub-nav-item">My Coupons</a>
+    </div>
+
+    <div class="main-content">
+        <h1>Manage Addresses</h1>
+    
+        <div class="add-address" id="addAddressBtn">
+            <span>+</span>
+            ADD A NEW ADDRESS
+        </div>
+
+        <% if (userData.address && userData.address.length > 0) { %>
+            <% userData.address.forEach((address, index) => { %>
+                <div class="address-card" id="address-<%= index %>">
+                    <div class="menu-dots" onclick="toggleAddressMenu('<%= index %>')">⋮</div>
+                    <div class="address-menu" id="address-menu-<%= index %>" style="display: none;">
+                        <button onclick="editAddress('<%= index %>')">Edit</button>
+                        <button onclick="deleteAddress('<%= address._id %>')">Delete</button>
+                    </div>
+                    <div class="address-type">Home</div>
+                    <div class="address-details">
+                        <strong><%= address.name %></strong>
+                        <span class="phone"><%= address.phone %></span>
+                        <p>
+                            <%= address.street %><br>
+                            <%= address.area %><br>
+                            <%= address.city %>, <%= address.state %> - <%= address.pincode %>
+                        </p>
+                    </div>
+                </div>
+            <% }); %>
+        <% } else { %>
+            <div class="no-address">
+                <p>No addresses found. Add your first address!</p>
+            </div>
+        <% } %>
+    </div>
+
+    <script>
+        function toggleAddressMenu(index) {
+            const allMenus = document.querySelectorAll('.address-menu');
+            allMenus.forEach(menu => menu.style.display = 'none');
+            
+            const menu = document.getElementById(`address-menu-${index}`);
+            menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+        }
+
+        document.addEventListener('click', function(event) {
+            if (!event.target.matches('.menu-dots')) {
+                const allMenus = document.querySelectorAll('.address-menu');
+                allMenus.forEach(menu => menu.style.display = 'none');
+            }
+        });
+    
+        document.getElementById('addAddressBtn').addEventListener('click', () => {
+            window.location.href = '/add-address';
+        });
+    
+        function editAddress(index) {
+            const address = '<%= JSON.stringify(userData.address) %>'[index];
+            window.location.href = `/edit-address/${address._id}`;
+        }
+    
+        async function deleteAddress(addressId) {
+            if (confirm('Are you sure you want to delete this address?')) {
+                try {
+                    const response = await fetch(`/delete-address/${addressId}`, {
+                        method: 'DELETE',
+                    });
+                    if (response.ok) {
+                        window.location.reload();
+                    } else {
+                        alert('Failed to delete address.');
+                    }
+                } catch (error) {
+                    console.error('Error deleting address:', error);
+                }
+            }
+        }
+    </script>
+</body>
+</html>

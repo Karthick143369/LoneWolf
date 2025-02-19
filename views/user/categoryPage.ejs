@@ -1,0 +1,599 @@
+<%- include('../layouts/user/header',{title:"LoneWolf"}) %>
+
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+	<!-- Start Banner Area -->
+	<section class="banner-area organic-breadcrumb">
+		<div class="container">
+			<div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-start">
+				<div class="col-first">
+					<h1>Shop Category page</h1>
+				</div>
+			</div>
+		</div>
+	</section>
+	<style>
+		/* styles.css */
+		.see-more-btn {
+			background-color: rgb(220, 118, 24);
+			color: white;
+			padding: 10px 20px;
+			text-decoration: none;
+			border-radius: 5px;
+			display: inline-block;
+			text-align: center;
+			margin-top: 20px;
+		}
+
+		.see-more-btn:hover {
+			background-color: rgb(210, 109, 32);
+			/* Optional: Change color on hover */
+		}
+
+		.text-right {
+			text-align: right;
+		}
+
+		.availability-label .badge {
+			font-size: 1.2rem;
+			/* Custom font size */
+			/* Additional custom styles */
+		}
+
+		.wishlist-icon {
+			cursor: pointer;
+			font-size: 24px;
+			position: absolute;
+			top: 10px;
+			right: 10px;
+			color: #ccc;
+		}
+
+		.wishlist-icon.text-danger {
+			color: red;
+		}
+	</style>
+	<!-- End Banner Area -->
+	<div  class="container ">
+		<div  class="row">
+			<div  class="col-xl-3 col-lg-4 col-md-5">
+				<div class="sidebar-filter mt-50 mb-5">
+					<div  class="top-filter-head">Product Filters</div>
+					<button id="clearFilter" class="btn btn-secondary mt-3 ml-3" type="button">Clear All</button>
+					<div class="common-filter">
+						<div class="head">Brands</div>
+						<form id="brandFilterForm">
+							<ul>
+								<% brands.forEach(brand=> { %>
+									<li class="filter-list">
+										<input class="pixel-radio" type="radio" id="<%= brand._id %>" name="brand"
+											value="<%= brand._id %>">
+										<label for="<%= brand._id %>">
+											<%= brand.name %>
+										</label>
+									</li>
+									<% }) %>
+							</ul>
+						</form>
+					</div>
+					<div class="common-filter">
+						<div class="head">Categories</div>
+						<form id="categoryFilterForm">
+							<ul>
+								<% category.forEach(category=> { %>
+									<li class="filter-list">
+										<input class="pixel-radio" type="radio" id="<%= category.id %>" name="category"
+											value="<%= category._id %>">
+										<label for="<%= category._id %>">
+											<%= category.name %>
+										</label>
+									</li>
+									<% }) %>
+							</ul>
+						</form>
+					</div>
+
+
+
+					<div class="common-filter">
+						<div class="head">price</div>
+						<form id="priceFilterForm">
+							<ul>
+								<li class="filter-list">
+									<input class="pixel-radio" type="radio" name="price" value="0-2000">
+									<label>0 - 2000</label>
+
+								</li>
+								<li class="filter-list">
+									<input class="pixel-radio" type="radio" name="price" value="2000-5000">
+									<label>2000 - 5000</label>
+
+								</li>
+								<li class="filter-list">
+									<input class="pixel-radio" type="radio" name="price" value="5000-10000">
+									<label>5000 - 10000</label>
+								</li>
+
+							</ul>
+						</form>
+					</div>
+					<div class="common-filter">
+						<div class="head">Sort By</div>
+						<form id="sortForm">
+							<ul>
+								<li class="filter-list">
+									<input class="pixel-radio" type="radio" name="sort" value="price-asc">
+									<label>Price: Low to High</label>
+								</li>
+								<li class="filter-list">
+									<input class="pixel-radio" type="radio" name="sort" value="price-desc">
+									<label>Price: High to Low</label>
+								</li>
+								<li class="filter-list">
+									<input class="pixel-radio" type="radio" name="sort" value="name-asc">
+									<label>product name: A to Z</label>
+								</li>
+								<li class="filter-list">
+									<input class="pixel-radio" type="radio" name="sort"  value="name-desc">
+									<label>product name: Z to A</label>
+								</li>
+							</ul>
+						</form>
+					</div>
+					<button id="applyFiltersBtn" class="btn btn-primary mt-3 ml-3" type="button">Apply Filters</button>
+		
+
+				</div>
+				
+			</div>
+			<div class="col-xl-9 col-lg-8 col-md-7">
+
+				<br>
+				<br>
+				<!-- Start Filter Bar -->
+				<div class="filter-bar d-flex flex-wrap align-items-center">
+					<div class="sorting mr-auto">
+						<input type="text" id="searchInput" placeholder="Search..." class="form-control"
+							style="display: inline-block; width: 500px;">
+					</div>
+					<div class="pagination">
+						<% if (currentPage> 1) { %>
+							<a href="?page=<%= currentPage - 1 %>" class="prev-arrow"><i class="fa fa-long-arrow-left"
+									aria-hidden="true"></i></a>
+							<% } %>
+
+								<% for (let i=1; i <=totalPages; i++) { %>
+									<% if (i===currentPage) { %>
+										<a href="?page=<%= i %>" class="active">
+											<%= i %>
+										</a>
+										<% } else { %>
+											<a href="?page=<%= i %>">
+												<%= i %>
+											</a>
+											<% } %>
+												<% } %>
+													<% if (currentPage < totalPages) { %>
+														<a href="?page=<%= currentPage + 1 %>" class="next-arrow"><i
+																class="fa fa-long-arrow-right"
+																aria-hidden="true"></i></a>
+														<% } %>
+
+					</div>
+				</div>
+				<!-- End Filter Bar -->
+				<br>
+
+					
+						<section class="lattest-product-area pb-40 category-list">
+							<div  class="row">
+								<!-- single product -->
+
+								<div  class="row" id="filteredProducts">
+									<!-- <% if (Array.isArray(products)) { %> -->
+										<% products?.forEach(product=> { %>
+											<div class="col-md-4 mb-4">
+												<div class="card h-50 product-card">
+													<a href="/product/<%= product._id %>">
+														<!-- Link to product details page -->
+														<img src="<%= product.images[0]  %>" class="card-img-top"
+															alt="<%= product.productName %>"
+															data-product-id="<%= product._id %>">
+													</a>
+													<div
+														class="availability-label position-absolute top-0 end-0 mt-2 me-2">
+														<% if (product.stock>0) { %>
+															<span class="badge badge-success">In Stock</span>
+															<% } else { %>
+																<span class="badge badge-danger  fs-5">Out of
+																	Stock</span>
+																<% } %>
+													</div>
+													<div class="card-body">
+														<h5 class="card-title">
+															<%= product.productName %>
+														</h5>
+														<h6 class="card-text">
+															<%= product?.brand?.name %>
+														</h6>
+
+														<p class="card-text">Price: $<%= product.price %>
+														</p>
+
+														<form action="/cart" method="POST">
+															<input type="hidden" name="productId"
+																value="<%= product._id %>"
+																data-stock="<%= product.stock %>">
+															<button class="primary-btn btn btn-dark add-to-cart-btn"
+																type="submit">Add to Cart</button>
+														</form>
+														<i class=" fa-heart far wishlist-icon "
+															data-product-id="<%= product._id %>"></i>
+													</div>
+												</div>
+											</div>
+											<% }); %>
+								</div>
+
+
+
+								<% } else { %>
+									<p>No products found.</p>
+									<% } %>
+							</div>
+				
+</section>
+			</div>
+		</div>
+	</div>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+	
+	<!-- when outof stock it prevent add to cart -->
+	<script>
+		document.addEventListener('DOMContentLoaded', function () {
+			const wishlistIcons = document.querySelectorAll('.wishlist-icon');
+
+			wishlistIcons.forEach(icon => {
+				icon.addEventListener('click', function () {
+
+					this.classList.toggle('far');
+					this.classList.toggle('fas');
+					// this.classList.toggle('text-danger');
+
+
+					const productId = this.getAttribute('data-product-id');
+					addToWishlist({ productId });
+				});
+			});
+		});
+
+		async function addToWishlist(productId) {
+			try {
+				const response = await fetch('/wish', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify(productId)
+
+				})
+				const data = await response.json();
+				if (response.ok) {
+					console.log('added products to wishlist:', data);
+					Swal.fire({
+						position: 'bottom',
+						// icon: 'success',
+						title: data.message || 'wishlist!',
+						showConfirmButton: false,
+						timer: 2000
+					});
+				} else {
+					console.log(' error in adding products to wishlist:', data);
+					Swal.fire({
+						position: 'bottom',
+						icon: 'error',
+						title: data.message,
+						showConfirmButton: false,
+						timer: 3000
+					});
+				}
+			} catch (error) {
+				console.log('error occured while adding to wishlist', error.message);
+			}
+
+		}
+	</script>
+	<script>
+		document.addEventListener('DOMContentLoaded', function () {
+			const addToCartButtons = document.querySelectorAll('.add-to-cart-btn');
+
+			addToCartButtons.forEach(button => {
+				button.addEventListener('click', function (event) {
+					event.preventDefault();
+
+					const form = button.closest('form');
+					const productId = form.querySelector('input[name="productId"]').value;
+					const stock = parseInt(form.querySelector('input[name="productId"]').dataset.stock);
+
+					if (stock === 0) {
+						Swal.fire({
+							icon: 'info',
+							title: 'Out of Stock',
+							text: 'This product is currently out of stock.',
+							confirmButtonText: 'OK'
+						});
+					} else {
+						form.submit();
+					}
+				});
+			});
+		});
+	</script>
+
+	<!-- searching the products -->
+	<script>
+		document.getElementById('searchInput').addEventListener('input', function () {
+			const query = this.value;
+
+			const response = fetch(`/search?query=${query}`)
+				.then(response => response.json())
+				.then(data => {
+					const productContainer = document.getElementById('filteredProducts');
+					productContainer.innerHTML = '';
+
+					if (data.products.length > 0) {
+						data.products.forEach(product => {
+							const productHTML = `
+                        <div class="col-md-4 mb-4">
+                            <div class="card h-50 product-card">
+                                <a href="/product/${product._id}">
+                                    <img src="${product.images[0].replace('/public', '')}" class="card-img-top" alt="${product.productName}">
+                                </a>
+                                <div class="card-body">
+                                    <h5 class="card-title">${product.productName}</h5>
+                                    <h5 class="card-title">${product.brand.name}</h5>
+                                    <p class="card-text">Price: $${product.price}</p>
+                                    <form action="/cart" method="POST">
+                                        <input type="hidden" name="productId" value="${product._id}">
+                                        <button class="primary-btn btn btn-dark" type="submit">Add to Cart</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+							productContainer.innerHTML += productHTML;
+						});
+					} else {
+						productContainer.innerHTML = '<p>No products found.</p>';
+					}
+				})
+				.catch(error => console.error('Error fetching search results:', error));
+
+		})
+	</script>
+
+	<!-- filter products based on brand category and price -->
+	<script>
+		document.addEventListener('DOMContentLoaded', () => {
+			const brandFilterForm = document.getElementById('brandFilterForm');
+			const categoryFilterForm = document.getElementById('categoryFilterForm');
+			const priceFilterForm = document.getElementById('priceFilterForm');
+			const applyFiltersBtn = document.getElementById('applyFiltersBtn');
+			const sortForm = document.getElementById('sortForm');
+			const searchInput = document.getElementById('searchInput');
+			const filteredProducts = document.getElementById('filteredProducts');
+			const paginationContainer = document.querySelector('.pagination')
+
+			// Event listener for filter forms
+			const val = applyFiltersBtn.addEventListener('click', () => applyFilters());
+
+			// apply filter function and fetch products from backend
+			async function applyFilters(page=1) {
+
+				const brand = brandFilterForm.querySelector('input[name="brand"]:checked')?.value;
+				const category = categoryFilterForm.querySelector('input[name="category"]:checked')?.value;
+				const priceRange = priceFilterForm.querySelector('input[name="price"]:checked')?.value;
+				const sort = sortForm.querySelector('input[name="sort"]:checked')?.value;
+				const searchTerm = searchInput.value.trim();
+				
+				try {
+					const response = await fetch(`/filter?brand=${brand}&category=${category}&priceRange=${priceRange}&sort=${sort}&search=${encodeURIComponent(searchTerm)}&page=${page}`);
+					if (!response.ok) {
+						console.log('response is not ok')
+						throw new Error('Network response was not ok');
+					}
+					const data = await response.json();
+					console.log('data is:', data)
+
+					displayProducts(data.products);
+					updatePagination(data.currentPage, data.totalPages)
+				} catch (error) {
+					console.error('Error applying filters:', error);
+					displayProducts([]);
+				}
+			}
+			document.getElementById('searchInput').addEventListener('input', function () {
+			const query = this.value;
+			const brand = brandFilterForm.querySelector('input[name="brand"]:checked')?.value;
+			const category = categoryFilterForm.querySelector('input[name="category"]:checked')?.value;
+			const priceRange = priceFilterForm.querySelector('input[name="price"]:checked')?.value;
+			const sort = sortForm.querySelector('input[name="sort"]:checked')?.value;
+			const searchTerm = searchInput.value.trim();
+			
+			// const response = fetch(`/search?query=${query}`)
+			const response = fetch(`/search?brand=${brand}&category=${category}&priceRange=${priceRange}&sort=${sort}&search=${encodeURIComponent(searchTerm)}`)
+				.then(response => response.json())
+				.then(data => {
+					const productContainer = document.getElementById('filteredProducts');
+					productContainer.innerHTML = '';
+
+					if (data.products.length > 0) {
+						data.products.forEach(product => {
+							const productHTML = `
+                        <div class="col-md-4 mb-4">
+                            <div class="card h-50 product-card">
+                                <a href="/product/${product._id}">
+                                    <img src="${product.images[0].replace('/public', '')}" class="card-img-top" alt="${product.productName}">
+                                </a>
+                                <div class="card-body">
+                                    <h5 class="card-title">${product.productName}</h5>
+                                    <h5 class="card-title">${product.brand.name}</h5>
+                                    <p class="card-text">Price: $${product.price}</p>
+                                    <form action="/cart" method="POST">
+                                        <input type="hidden" name="productId" value="${product._id}">
+                                        <button class="primary-btn" type="submit">Add to Cart</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+							productContainer.innerHTML += productHTML;
+						});
+					} else {
+						productContainer.innerHTML = '<p>No products found.</p>';
+					}
+				})
+				.catch(error => console.error('Error fetching search results:', error));
+
+		})
+
+		function updatePagination(currentPage, totalPages) {
+        paginationContainer.innerHTML = '';
+
+        if (currentPage > 1) {
+            paginationContainer.innerHTML += `<a href="?page=${currentPage - 1}" class="prev-arrow"><i class="fa fa-long-arrow-left" aria-hidden="true"></i></a>`;
+        }
+
+        for (let i = 1; i <= totalPages; i++) {
+            if (i === currentPage) {
+                paginationContainer.innerHTML += `<a href="?page=${i}" class="active">${i}</a>`;
+            } else {
+                paginationContainer.innerHTML += `<a href="?page=${i}">${i}</a>`;
+            }
+        }
+
+        if (currentPage < totalPages) {
+            paginationContainer.innerHTML += `<a href="?page=${currentPage + 1}" class="next-arrow"><i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>`;
+        }
+    }
+
+
+			document.getElementById('searchInput').addEventListener('input', function () {
+				applyFilters(1);
+			});
+
+			applyFilters(page);
+
+			function displayProducts(products) {
+				filteredProducts.innerHTML = '';
+
+				if (products.length > 0) {
+					products.forEach(product => {
+						const productCard = document.createElement('div');
+						productCard.classList.add('col-md-4', 'mb-4');
+						productCard.innerHTML = `
+                    <div class="card h-50 product-card">
+                        <a href="/product/${product._id}">
+                            <img src="${product.images[0].replace('/public', '')}" class="card-img-top" alt="${product.productName}" data-product-id="${product._id}">
+                        </a>
+                        <div class="card-body">
+                            <h5 class="card-title">${product.productName}</h5>
+                            <h6 class="card-text">${product.brand.name}</h6>
+                            <p class="card-text">Price: $${product.price}</p>
+                            <form action="/cart" method="POST">
+                                <input type="hidden" name="productId" value="${product._id}">
+                                <button class="primary-btn" type="submit">Add to Cart</button>
+                            </form>
+                        </div>
+                    </div>
+                `;
+						filteredProducts.appendChild(productCard);
+					});
+				} else {
+					// Display message when no products are found
+					filteredProducts.innerHTML = `<div class="text-center "><h1 style="color: blue;">No products found.</h1></div>`;
+				}
+			}
+		})
+	</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+	<!-- <script>
+		document.addEventListener('DOMContentLoaded', () => {
+			const brandFilterForm = document.getElementById('brandFilterForm');
+			const categoryFilterForm = document.getElementById('categoryFilterForm');
+			const priceFilterForm = document.getElementById('priceFilterForm');
+			const applyFiltersBtn = document.getElementById('applyFiltersBtn');
+			const filteredProducts = document.getElementById('filteredProducts');
+
+			// Event listener for filter forms
+			const val = applyFiltersBtn.addEventListener('click', () => applyFilters());
+
+			// apply filter function and fetch products from backend
+			async function applyFilters() {
+
+				const brand = brandFilterForm.querySelector('input[name="brand"]:checked')?.value;
+				const category = categoryFilterForm.querySelector('input[name="category"]:checked')?.value;
+				const priceRange = priceFilterForm.querySelector('input[name="price"]:checked')?.value;
+
+				try {
+					const response = await fetch(`/filter?brand=${brand}&category=${category}&priceRange=${priceRange}`);
+					if (!response.ok) {
+						console.log('response is not ok')
+						throw new Error('Network response was not ok');
+
+					}
+					const data = await response.json();
+					console.log('data is:', data)
+
+					displayProducts(data.products);
+				} catch (error) {
+					console.error('Error applying filters:', error);
+					displayProducts([]);
+				}
+			}
+
+			function displayProducts(products) {
+				filteredProducts.innerHTML = '';
+
+				if (products.length > 0) {
+					products.forEach(product => {
+						const productCard = document.createElement('div');
+						productCard.classList.add('col-md-4', 'mb-4');
+						productCard.innerHTML = `
+                    <div class="card h-50 product-card">
+                        <a href="/product/${product._id}">
+                            <img src="${product.images[0].replace('/public', '')}" class="card-img-top" alt="${product.productName}" data-product-id="${product._id}">
+                        </a>
+                        <div class="card-body">
+                            <h5 class="card-title">${product.productName}</h5>
+                            <h6 class="card-text">${product.brand.name}</h6>
+                            <p class="card-text">Price: $${product.price}</p>
+                            <form action="/cart" method="POST">
+                                <input type="hidden" name="productId" value="${product._id}">
+                                <button class="primary-btn" type="submit">Add to Cart</button>
+                            </form>
+                        </div>
+                    </div>
+                `;
+						filteredProducts.appendChild(productCard);
+					});
+				} else {
+					// Display message when no products are found
+					filteredProducts.innerHTML = `<div class="text-center "><h1 style="color: blue;">No products found.</h1></div>`;
+				}
+			}
+		})
+	</script> -->
+
+	<!-- clear all the filters -->
+	 <script>
+		document.getElementById('clearFilter').addEventListener('click',()=>{
+			window.location.reload()
+		})
+	 </script>
+
+<%- include('../layouts/user/footer') %>
+
+

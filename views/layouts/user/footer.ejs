@@ -1,0 +1,254 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+    footer {
+        font-family: "Barlow", sans-serif;
+        background-color: #DDD0C8;
+        color: #323232;
+        position: relative;
+        overflow: hidden;
+    }
+
+    footer::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #323232 0%, #595959 100%);
+    }
+
+    .footer-container {
+        padding: 4rem 0 2rem;
+    }
+
+    .footer-brand {
+        display: flex;
+        align-items: flex-start;
+        gap: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .footer-logo {
+        width: 120px;
+        height: 120px;
+        object-fit: cover;
+        border-radius: 15px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        transition: transform 0.3s ease;
+    }
+
+    .footer-logo:hover {
+        transform: translateY(-5px);
+    }
+
+    .brand-info h3 {
+        color: #323232;
+        font-weight: 700;
+        font-size: 1.8rem;
+        margin-bottom: 1rem;
+        position: relative;
+        display: inline-block;
+    }
+
+    .brand-info h3::after {
+        content: '';
+        position: absolute;
+        bottom: -5px;
+        left: 0;
+        width: 40px;
+        height: 3px;
+        background-color: #323232;
+    }
+
+    .brand-info p {
+        font-size: 1rem;
+        line-height: 1.6;
+        color: #4a4a4a;
+        max-width: 400px;
+    }
+
+    .footer-section {
+        margin-bottom: 2rem;
+    }
+
+    .footer-section h6 {
+        color: #323232;
+        font-weight: 600;
+        font-size: 1.2rem;
+        margin-bottom: 1.5rem;
+        position: relative;
+        padding-bottom: 10px;
+    }
+
+    .footer-section h6::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 30px;
+        height: 2px;
+        background-color: #323232;
+    }
+
+    .footer-section p {
+        margin-bottom: 0.8rem;
+        font-size: 0.95rem;
+        color: #4a4a4a;
+        transition: transform 0.2s ease;
+    }
+
+    .footer-section p:hover {
+        transform: translateX(5px);
+    }
+
+    .contact-info i {
+        margin-right: 10px;
+        color: #323232;
+    }
+
+    .social-icons {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+
+    .social-icon {
+        width: 40px;
+        height: 40px;
+        background-color: #323232;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+    }
+
+    .social-icon:hover {
+        transform: translateY(-5px) rotate(360deg);
+        background-color: #4a4a4a;
+    }
+
+    .social-icon img {
+        width: 20px;
+        height: 20px;
+        filter: brightness(0) invert(1);
+    }
+
+    .footer-bottom {
+        background-color: #323232;
+        padding: 1.5rem 0;
+        margin-top: 2rem;
+    }
+
+    .copyright {
+        color: #DDD0C8;
+        font-size: 0.9rem;
+        text-align: center;
+        margin: 0;
+    }
+
+    .copyright span {
+        color: #ffffff;
+        font-weight: 500;
+    }
+
+    .contact-info p {
+        display: flex;
+        align-items: center;
+    }
+
+    @media (max-width: 768px) {
+        .footer-brand {
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .brand-info h3::after {
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .footer-section {
+            text-align: center;
+        }
+
+        .footer-section h6::after {
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .social-icons {
+            justify-content: center;
+        }
+    }
+</style>
+
+<footer class="mt-5">
+    <div class="footer-container">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-5">
+                    <div class="footer-brand">
+                        <img src="https://i.pinimg.com/originals/e6/1b/a8/e61ba845bb202b01a2e5eb6834008be3.jpg" alt="Logo" class="footer-logo">
+                        <div class="brand-info">
+                            <h3>lone_wolf</h3>
+                            <p>Crafting exceptional experiences through innovation and dedication. Your trusted partner in quality products and outstanding service.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-7">
+                    <div class="row">
+                        <div class="col-md-4 footer-section">
+                            <h6>Contact Us</h6>
+                            <div class="contact-info">
+                                <p><i class="fas fa-map-marker-alt"></i> Hilite Mall, Palazhi</p>
+                                <p><i class="fas fa-city"></i> Kozhikode, Kerala</p>
+                                <p><i class="fas fa-phone"></i> +91 7340293645</p>
+                                <p><i class="fas fa-envelope"></i> lone_wolf@contact.com</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4 footer-section">
+                            <h6>Our Services</h6>
+                            <p>Premium Products</p>
+                            <p>Custom Solutions</p>
+                            <p>Digital Innovation</p>
+                            <p>24/7 Support</p>
+                        </div>
+                        <div class="col-md-4 footer-section">
+                            <h6>Connect With Us</h6>
+                            <p>Stay updated with our latest news and offers</p>
+                            <div class="social-icons">
+                                <a href="#" class="social-icon">
+                                    <img src="https://static.vecteezy.com/system/resources/previews/023/986/589/non_2x/whatsapp-logo-whatsapp-logo-transparent-whatsapp-icon-transparent-free-free-png.png" alt="WhatsApp">
+                                </a>
+                                <a href="#" class="social-icon">
+                                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/2021_Facebook_icon.svg/2048px-2021_Facebook_icon.svg.png" alt="Facebook">
+                                </a>
+                                <a href="#" class="social-icon">
+                                    <img src="https://cdn2.iconfinder.com/data/icons/popular-social-media-flat/48/Popular_Social_Media-08-512.png" alt="Instagram">
+                                </a>
+                                <a href="#" class="social-icon">
+                                    <img src="https://www.iconpacks.net/icons/2/free-reddit-logo-icon-2436-thumb.png" alt="Reddit">
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <div class="container">
+            <p class="copyright">© 2025 <span>lone_wolf</span>. All rights reserved. Crafted with <i class="fas fa-heart" style="color: #DDD0C8;"></i> in Kerala</p>
+        </div>
+    </div>
+</footer>
+
+<!-- Scripts -->
+<script src="/js/vendor/jquery-2.2.4.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+<script src="/js/vendor/bootstrap.min.js"></script>

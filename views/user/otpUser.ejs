@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700">
+</head>
+<style>
+    .hidden {
+    display: none;
+}
+
+</style>
+<body>
+
+    <div class="relative font-inter antialiased">
+
+        <main class="relative min-h-screen flex flex-col justify-center bg-slate-50 overflow-hidden">
+            <div class="w-full max-w-6xl mx-auto px-4 md:px-6 py-24">
+                <div class="flex justify-center">
+
+                    <div class="max-w-md mx-auto text-center bg-white px-4 sm:px-8 py-10 rounded-xl shadow">
+                        <header class="mb-8">
+                            <h1 class="text-2xl font-bold mb-1">Email Verification</h1>
+                            <% if (locals.show) { %>
+                                <div class="<%= locals.isError ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700' %> alert alert-dismissible fade show"
+                                    role="alert">
+                                    <p>
+                                        <%= show %>
+                                    </p>
+                                </div>
+                                <% } %>
+
+                        </header>
+                        <div id="error-message" class="hidden mb-4 bg-red-100 text-red-700 p-2 rounded"></div>
+                        <!-- <div id="error-message" class="hidden mb-4 p-2 rounded"></div> -->
+                        <!-- Error message div -->
+
+                        <form id="otp-form" action="/verifyOtp" method="post">
+                            <div class="flex items-center justify-center gap-3">
+                                <input type="text"
+                                    class="w-14 h-14 text-center text-2xl font-extrabold text-slate-900 bg-slate-100 border border-transparent hover:border-slate-200 appearance-none rounded p-4 outline-none focus:bg-white focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100"
+                                    pattern="\d*" maxlength="1" name="otpDigit1" id="otpDigit1" />
+                                <input type="text"
+                                    class="w-14 h-14 text-center text-2xl font-extrabold text-slate-900 bg-slate-100 border border-transparent hover:border-slate-200 appearance-none rounded p-4 outline-none focus:bg-white focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100"
+                                    maxlength="1" name="otpDigit2" id="otpDigit2" />
+                                <input type="text"
+                                    class="w-14 h-14 text-center text-2xl font-extrabold text-slate-900 bg-slate-100 border border-transparent hover:border-slate-200 appearance-none rounded p-4 outline-none focus:bg-white focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100"
+                                    maxlength="1" name="otpDigit3" id="otpDigit3" />
+                                <input type="text"
+                                    class="w-14 h-14 text-center text-2xl font-extrabold text-slate-900 bg-slate-100 border border-transparent hover:border-slate-200 appearance-none rounded p-4 outline-none focus:bg-white focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100"
+                                    maxlength="1" name="otpDigit4" id="otpDigit4" />
+                            </div>
+                            <div class="max-w-[260px] mx-auto mt-4">
+                                <button type="submit"
+                                    class="w-full inline-flex justify-center whitespace-nowrap rounded-lg bg-indigo-500 px-3.5 py-2.5 text-sm font-medium text-white shadow-sm shadow-indigo-950/10 hover:bg-indigo-600 focus:outline-none focus:ring focus:ring-indigo-300 focus-visible:outline-none focus-visible:ring focus-visible:ring-indigo-300 transition-colors duration-150">Verify
+                                    Account</button>
+                            </div>
+                        </form>
+                        <!-- Modify the button to have an id -->
+                        <div class="text-sm text-slate-500 mt-4">Didn't receive code?</div>
+
+                        <a href="/resendOtp" id="resendOtpBtn"
+                            class="block w-full text-center py-2 bg-indigo-500 text-white font-medium rounded-lg shadow-sm hover:bg-indigo-600 focus:outline-none focus:ring focus:ring-indigo-300 focus-visible:outline-none focus-visible:ring focus-visible:ring-indigo-300 transition-colors duration-150"
+                            onclick="handleResendOTP(event)">
+                            Resend OTP
+                        </a>
+
+                        <!-- Add this div to display the timer -->
+                        <div id="timer" class="text-sm text-slate-500 mt-4">Timer: <span id="timerDisplay">01:00</span>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </main>
+
+        <!-- Page footer -->
+        <footer class="absolute left-6 right-6 md:left-12 md:right-auto bottom-4 md:bottom-8 text-center md:text-left">
+            <a class="text-xs text-slate-500 hover:underline" href="https://cruip.com">&copy;Cruip - Tailwind CSS
+                templates</a>
+        </footer>
+
+        <!-- Banner with links -->
+        <div class="fixed bottom-0 right-0 w-full md:bottom-6 md:right-12 md:w-auto z-50"
+            :class="bannerOpen ? '' : 'hidden'" x-data="{ bannerOpen: true }">
+            <div class="bg-slate-800 text-sm p-3 md:rounded shadow flex justify-between">
+                <div class="text-slate-500 inline-flex">
+                    <a class="font-medium hover:underline text-slate-300"
+                        href="https://cruip.com/otp-form-example-made-with-tailwind-css-and-javascript/"
+                        target="_blank">
+                        Read Tutorial
+                    </a>
+                    <span class="italic px-1.5">or</span>
+                    <a class="font-medium hover:underline text-indigo-500 flex items-center"
+                        href="https://github.com/cruip/cruip-tutorials/blob/main/otp-form/index.html" target="_blank"
+                        rel="noreferrer">
+                        <span>Download</span>
+                        <svg class="fill-indigo-400 ml-1" xmlns="http://www.w3.org/2000/svg" width="9" height="9">
+                            <path d="m1.649 8.514-.91-.915 5.514-5.523H2.027l.01-1.258h6.388v6.394H7.158l.01-4.226z" />
+                        </svg>
+                    </a>
+                </div>
+                <button class="text-slate-500 hover:text-slate-400 pl-2 ml-3 border-l border-slate-700"
+                    @click="bannerOpen = false">
+                    <span class="sr-only">Close</span>
+                    <svg class="w-4 h-4 shrink-0 fill-current" viewBox="0 0 16 16">
+                        <path
+                            d="M12.72 3.293a1 1 0 00-1.415 0L8.012 6.586 4.72 3.293a1 1 0 00-1.414 1.414L6.598 8l-3.293 3.293a1 1 0 101.414 1.414l3.293-3.293 3.293 3.293a1 1 0 001.414-1.414L9.426 8l3.293-3.293a1 1 0 000-1.414z" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        inter: ['Inter', 'sans-serif'],
+                    },
+                },
+            },
+        };
+    </script>
+
+    <!-- resend otp using fetch method -->
+<script>
+    const handleResendOTP = async (event) => {
+    event.preventDefault();
+    try {
+        // Clear the OTP input fields
+        document.getElementById('otpDigit1').value = '';
+        document.getElementById('otpDigit2').value = '';
+        document.getElementById('otpDigit3').value = '';
+        document.getElementById('otpDigit4').value = '';
+        
+        const response = await fetch('/resendOtp', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        const data = await response.json();
+        
+        if (response.ok) {
+            if (data.message) {
+                console.log('Success:', data);
+                window.location.href = '/user/signup';
+            } else if (data.success) {
+                console.log('Success:', data);
+                const errorMessageDiv = document.getElementById('error-message');
+                errorMessageDiv.classList.add('hidden');
+                const successMessageDiv = document.querySelector('.alert-dismissible');
+                    if (successMessageDiv) {
+                        successMessageDiv.remove();
+                    }
+                // Show success message using Toastify
+                Toastify({
+                    text: data.success || 'OTP resend successful',
+                    duration: 3000, 
+                    gravity: 'top', 
+                    position: 'right', 
+                    backgroundColor: 'linear-gradient(to right, #00b09b, #96c93d)',
+                }).showToast();
+            }
+        } else {
+            const successMessageDiv = document.querySelector('.alert-dismissible');
+                    if (successMessageDiv) {
+                        successMessageDiv.remove();
+                    }
+            console.log('Error:', data.error);
+            const errorMessageDiv = document.getElementById('error-message');
+            errorMessageDiv.classList.add('hidden');
+            // Show error message using Toastify
+            Toastify({
+                text: data.error || 'Verification failed',
+                duration: 3000,
+                gravity: 'top',
+                position: 'right',
+                backgroundColor: 'linear-gradient(to right, #ff5f6d, #ffc371)',
+            }).showToast();
+        }
+    } catch (error) {
+        console.error('Error occurred:', error);
+        const errorMessageDiv = document.getElementById('error-message');
+        errorMessageDiv.classList.add('hidden');
+        // Show error message using Toastify
+        Toastify({
+            text: error.message || 'An unexpected error occurred',
+            duration: 3000,
+            gravity: 'top',
+            position: 'right',
+            backgroundColor: 'linear-gradient(to right, #ff5f6d, #ffc371)',
+        }).showToast();
+    }
+};
+
+</script>
+    <!-- timer used to show for 2 minutes -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const timerDisplay = document.getElementById('timerDisplay');
+            let timeLeft = 120; // 1 minutes in seconds
+            let timerInterval;
+
+            // Function to format seconds to mm:ss format
+            const formatTime = (time) => {
+                const minutes = Math.floor(time / 60);
+                const seconds = time % 60;
+                return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            };
+
+            // Function to update the timer display
+            const updateTimer = () => {
+                timerDisplay.textContent = formatTime(timeLeft);
+            };
+
+            // Function to start the timer
+            const startTimer = () => {
+                timeLeft = 120; // Reset time to 2 minutes
+                updateTimer();
+                timerInterval = setInterval(() => {
+                    timeLeft--;
+                    updateTimer();
+                    if (timeLeft === 0) {
+                        clearInterval(timerInterval);
+                        // Display "Resend OTP" message or perform resend OTP action here
+                        document.getElementById('timer').textContent = 'Timer: Resend OTP';
+                    }
+                }, 1000); // Update every second
+            };
+
+            // Start the timer when the page loads
+            startTimer();
+
+            // Event listener for the "Resend OTP" button
+            document.getElementById('resendOtpBtn').addEventListener('click', () => {
+                clearInterval(timerInterval); // Stop the current timer
+                startTimer(); // Start a new timer
+            });
+        });
+    </script>
+
+    <!-- otp form submission -->
+    <script>
+        document.getElementById('otp-form').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            // Collect form data
+            const otpData = {
+                otpDigit1: document.getElementById('otpDigit1').value,
+                otpDigit2: document.getElementById('otpDigit2').value,
+                otpDigit3: document.getElementById('otpDigit3').value,
+                otpDigit4: document.getElementById('otpDigit4').value
+            };
+
+            try {
+                const response = await fetch('/verifyOtp', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(otpData)
+                })
+                const data = await response.json()
+                if (response.ok) {
+                    console.log('success:', data)
+                    if (data.success) {
+                        // Redirect or show success message
+                        window.location.href = '/';
+                    } else {
+                        const successMessageDiv = document.querySelector('.alert-dismissible');
+                        if (successMessageDiv) {
+                            successMessageDiv.remove();
+                        }
+                        const errorMessageDiv = document.getElementById('error-message');
+                        errorMessageDiv.textContent = data.success || 'resend otp send';
+                        errorMessageDiv.classList.remove('hidden');
+                    }
+                } else {
+                    console.log('data:', data)
+                    const successMessageDiv = document.querySelector('.alert-dismissible');
+                    if (successMessageDiv) {
+                        successMessageDiv.remove();
+                    }
+                    console.log('data error:', data)
+                    const errorMessageDiv = document.getElementById('error-message');
+                    errorMessageDiv.textContent = data.error || 'Verification failed';
+                    errorMessageDiv.classList.remove('hidden');
+
+                }
+            } catch (error) {
+                console.log('error ocurred:', error.message)
+                const successMessageDiv = document.querySelector('.alert-dismissible');
+                if (successMessageDiv) {
+                    successMessageDiv.remove();
+                }
+
+                const errorMessageDiv = document.getElementById('error-message');
+                errorMessageDiv.textContent = error.messsage;
+                errorMessageDiv.classList.remove('hidden');
+            }
+        })
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="/script/home.js"></script>
+</body>
+
+</html>

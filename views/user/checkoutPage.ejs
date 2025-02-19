@@ -1,0 +1,1176 @@
+<%- include('../layouts/user/header',{title:"checkout-Page"}) %>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+<style>
+    /* Luxurious Checkout Styles */
+.checkout-container {
+    background: linear-gradient(to bottom, #ffffff, #f8f9fa);
+    padding: 3rem 0;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+}
+
+.section-title {
+    font-family: 'Playfair Display', serif;
+    color: #2c3e50;
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    position: relative;
+    padding-bottom: 1rem;
+}
+
+.section-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 60px;
+    height: 3px;
+    background: #323232;
+}
+
+/* Updated Button Styles */
+.place-order-btn {
+    display: inline-block;
+    padding: 14px 32px;
+    background: #323232;
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 16px;
+    border-radius: 8px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(50, 50, 50, 0.25);
+    border: none;
+    cursor: pointer;
+    text-align: center;
+}
+
+.place-order-btn:hover {
+    background: #404040;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 8px rgba(50, 50, 50, 0.35);
+}
+
+.place-order-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(50, 50, 50, 0.25);
+}
+
+/* Updated secondary button styles */
+.btn-outline-secondary {
+    color: #323232 !important;
+    border-color: #323232 !important;
+    background: transparent;
+    transition: all 0.3s ease;
+}
+
+.btn-outline-secondary:hover {
+    color: #ffffff !important;
+    background-color: #323232 !important;
+    border-color: #323232 !important;
+}
+
+.btn-primary {
+    background-color: #323232 !important;
+    border-color: #323232 !important;
+    color: #ffffff;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #404040 !important;
+    border-color: #404040 !important;
+}
+
+.btn-edit-address {
+    background: transparent;
+    color: #323232;
+    border: 1px solid #323232;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+}
+
+.btn-edit-address:hover {
+    background: #323232;
+    color: white;
+}
+
+/* Rest of the styles remain the same */
+.user-info-card {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+    padding: 2rem;
+    margin-bottom: 2rem;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.list-group-item {
+    border: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    padding: 1.2rem 1rem;
+    margin-bottom: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.list-group-item:hover {
+    background-color: #f8f9fa;
+    transform: translateX(5px);
+}
+
+.address-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+}
+
+.address-card:hover {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+}
+
+.order-summary-box {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    padding: 2rem;
+}
+
+.order-summary-box h2 {
+    font-family: 'Playfair Display', serif;
+    color: #2c3e50;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.05);
+}
+
+.order-table {
+    margin: 1.5rem 0;
+}
+
+.order-table th {
+    font-weight: 600;
+    color: #2c3e50;
+    padding: 1rem;
+    background: #f8f9fa;
+}
+
+.order-table td {
+    padding: 1rem;
+    vertical-align: middle;
+}
+
+.payment-methods {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    margin-top: 2rem;
+}
+
+.payment-method-item {
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 8px;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+}
+
+.payment-method-item:hover {
+    background: #f8f9fa;
+    border-color: #323232;
+}
+
+.coupon-section {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin: 2rem 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.coupon-section h4 {
+    color: #2c3e50;
+    margin-bottom: 1rem;
+}
+
+.coupon-input {
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 0.8rem 1rem;
+    transition: all 0.3s ease;
+}
+
+.coupon-input:focus {
+    border-color: #323232;
+    box-shadow: 0 0 0 2px rgba(50, 50, 50, 0.1);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .section-title {
+        font-size: 2rem;
+    }
+    
+    .user-info-card,
+    .order-summary-box,
+    .payment-methods {
+        padding: 1.5rem;
+    }
+}
+
+.deliver-here-label {
+    display: none;
+    background-color: #323232;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+    margin-left: 10px;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateX(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.address-radio-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.address-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+</style>
+    
+    <!--================Checkout Area =================-->
+    <div class="container mt-5 mb-5">
+        <div class="row">
+            <div class="col-md-6">
+                
+                <!-- <form id="userAddress"> -->
+                <div class="user-info">
+                    <h3>User Information:</h3>
+                    <ul class="list-group">
+                        <li class="list-group-item" data-name="<%= userData.name %>">
+                            <h6>NAME: <strong>
+                                    <%= userData.name %>
+                                </strong></h6>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <h6 id="updateNum">MOBILE NUMBER: <strong id="num">
+                                    <%= userData.mobileNumber %>
+                                </strong></h6>
+                            <button id="addNumber" class="btn btn-outline-secondary text-dark">Add Number</button>
+                        </li>
+                        <li id="hiddenItem" class="list-group-item col-md-12" style="display: none;">
+                            <p id="message" style="color: red;"></p>
+                            <input id="mobile" type="number" class="form-control" placeholder="Enter new mobile number">
+
+                        </li>
+                    </ul>
+
+                </div>
+                <br>
+                <% if (userData.address && userData.address.length> 0) { %>
+                    <h4>Choose Your Shipping Address:</h4>
+                    <ul class="list-group" id="addressList">
+                        <% userData.address.forEach((addr, index)=> { %>
+                            <!-- <li class="list-group-item"> -->
+                                <li class="list-group-item" data-index="<%= index %>">
+                                    <div class="address-radio-container">
+                                        <div>
+                                            <input class="pixel-radio" type="radio" id="addr_<%= index %>" name="address" value="<%= addr?._id %>">
+                                            <label for="addr_<%= addr?._id %>">
+                                                Address <%= index + 1 %>:
+                                            </label>
+                                            <p>
+                                                <%= addr?.street %>, <%= addr?.city %>, <%= addr?.state %>,
+                                                <%= addr?.country %>, <%= addr?.pinCode %>
+                                            </p>
+                                        </div>
+                                        <div class="address-actions">
+                                            <!-- "Deliver Here" label will be inserted here by JavaScript -->
+                                            <button id="editAddress" type="button"
+                                                class="btn btn-outline-secondary text-dark editAddressBtn"
+                                                data-index="<%= index %>"
+                                                data-address='<%= JSON.stringify(addr) %>'>
+                                                Edit Address
+                                            </button>
+                                        </div>
+                                    </div>
+                                </li>
+
+                            <% }) %>
+                                <!-- adding new address -->
+                                <!-- <li class="list-group-item " > <button id="addAddressBtn" class="btn btn-outline-secondary text-dark" > Add New Address</button></li> -->
+                                <% if (userData.address.length < 3) { %>
+                                    <!-- Add new address button -->
+                                    <li class="list-group-item">
+                                        <button type="button" class="btn btn-outline-secondary text-dark addAddressBtn"
+                                            id="addAddressBtn">Add New Address</button>
+                                    </li>
+                                    <% } %>
+                    </ul>
+                    <% } else { %>
+                        <p>No addresses found.</p>
+                        <li class="list-group-item "> <button id="addAddressBtn"
+                                class="btn btn-outline-secondary text-dark addAddressBtn"> Add New Address</button></li>
+
+                        <% } %>
+                            <!-- </form> -->
+
+                            <li class="list-group-item " style="display: none;" id="addressFormContainer">
+                                <form action="#" method="post" id="addressForm" onsubmit="return validateAddress()">
+                                    <span id="messageShow" class=" text-danger"></span>
+
+                                    <input type="hidden" name="addressId" id="addressId">
+
+                                    <div class="col-md-12 form-group p_star">
+                                        <input type="text" class="form-control" id="street" placeholder="Street name"
+                                            name="street" required>
+                                    </div>
+                                    <div class="col-md-12 form-group p_star">
+                                        <input type="text" class="form-control" placeholder="city name" id="city"
+                                            name="city" required>
+                                    </div>
+                                    <div class="col-md-12 form-group p_star">
+                                        <input type="text" class="form-control" id="state" placeholder="state"
+                                            name="state" required>
+                                    </div>
+                                    <div class="col-md-12 form-group p_star">
+                                        <input type="text" class="form-control" placeholder="country" id="country"
+                                            name="country" required>
+                                    </div>
+                                    <div class="col-md-12 form-group">
+                                        <input type="text" class="form-control" id="pinCode" name="pinCode"
+                                            placeholder="Postcode/ZIP" required>
+                                    </div>
+
+                                    <div class="buttonClass">
+                                        <button type="submit" class="btn btn-primary mr-4">Save Address</button>
+                                        <!-- <button  class="btn btn-primary" id="cancelButton">cancel</button> -->
+                                    </div>
+
+                                </form>
+                                <br>
+                                <button class="btn btn-primary" id="cancelButton">cancel</button>
+                            </li>
+
+                            <div class="cupon_area mt-5" style="display: flex; flex-direction: column; gap: 12px;">
+                                <div class="check_title">
+                                    <h4>Have a coupon? <a href="/coupons">Click here to enter your code</a></h4>
+                                </div>
+                                <input type="text" class="form-control" id="couponCode" placeholder="Enter coupon code">
+                                <button class="tp_btn btn btn-primary" id="applyCouponBtn">Apply Coupon</button>
+                                <button class="tp_btn bg-danger btn-sm" style="display: none;" id="removeCouponBtn">Remove Coupon</button>
+                                <p id="couponMessage" style="color: rgba(254, 121, 119, 0.852);"></p>
+                                <p style="color: rgb(218, 92, 92);"> Note: Orders with an applied coupon cannot be canceled, modified, or returned.</p>
+                            </div>
+                           
+
+            </div>
+
+
+            <div class="col-md-6">
+                <!-- <div class="col-lg-4"> -->
+                <div class="order_box">
+                    <h2>Your Order</h2>
+                    <table class="table">
+                        <!-- <caption>Your Order</caption> -->
+                        <thead>
+                            <tr>
+                                <th scope="col" style="width: 60%;">product</th>
+                                <th scope="col" style="width: 60%;">quantity</th>
+                                <th scope="col" style="width: 60%;">total</th>
+                            </tr>
+                        </thead>
+
+                        <% if (cartItems && cartItems.length>0) { %>
+
+                            <% cartItems.forEach(items=> { %>
+                                <tbody id="cartItemId" data-cart-item-id="<%= items?._id %>"></tbody>
+                                <% items?.products?.forEach(product=> { %>
+                                    <tr>
+                                        <td scope="row" style="width: 60%;">
+                                            <%= product?.productId?.productName%>
+                                        </td>
+                                        <td style="width: 60%;"> X <%= product?.quantity %>
+                                        </td>
+                                        <td style="width: 60%;">
+                                            <%= product?.offerPrice * product?.quantity %>
+                                        </td>
+                                    </tr>
+
+                                    <% }) %>
+                                        <% }) %>
+                                            <% } %>
+                                                <tr>
+                                                    <td style="width: 60%;">
+                                                        <h5>Grand Total</h5>
+                                                    </td>
+                                                    <td style="width: 60%;"></td>
+                                                    <td style="width: 60%;">
+                                                        <h4 name="grandTotal" id="grandTotal">
+                                                            ₹<%= totalAmount %>
+                                                        </h4>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="width: 60%;">
+                                                        <h5>Coupon Amount</h5>
+                                                    </td>
+                                                    <td style="width: 60%;"></td>
+                                                    <td style="width: 60%;">
+                                                        <h4 name="couponDiscount" id="couponAmount">
+                                                            ₹0.00
+                                                        </h4>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="width: 60%;">
+                                                        <h4>Sub Total</h4>
+                                                    </td>
+                                                    <td style="width: 60%;"></td>
+                                                    <td style="width: 60%;">
+                                                        <h4 name="totalAmount" id="checkoutTotal">
+                                                            <%= totalAmount %>
+                                                        </h4>
+                                                    </td>
+                                                </tr>
+
+                                                </tbody>
+                    </table>
+
+
+
+                    <div class="container mt-5">
+                        <h2>Select Payment Method</h2>
+
+                        <!-- Cash On Delivery -->
+                        <% if (totalAmount <= 1000) { %>
+                        <div class="payment_item-event bg-white p-3 mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" id="cod" name="paymentMethod" value="COD">
+                                <label class="form-check-label" for="cod">
+                                    Cash On Delivery
+                                </label>
+                            </div>
+                            
+                        </div>
+                        <% } %>
+                        <!-- Razorpay -->
+                        <div class="payment_item bg-white p-3 mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" id="razorpay" name="paymentMethod"
+                                    value="Razorpay">
+                                <label class="form-check-label" for="razorpay">
+                                   
+                                    Razorpay
+                                </label>
+                            </div>
+                            
+                        </div>
+
+                        <!-- Wallet -->
+                        <div class="payment_item bg-white p-3 mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" id="wallet" name="paymentMethod"
+                                    value="Wallet">
+                                <label class="form-check-label" for="wallet">
+                                    Wallet
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- <div class="creat_account">
+                        <input type="checkbox" id="f-option4" name="selector">
+                        <label for="f-option4">I’ve read and accept the </label>
+                        <a href="#">terms & conditions*</a>
+                    </div> -->
+                    <a id="submitOrderBtn" class="place-order-btn"  href="/confirmation">Place Order</a>
+                </div>
+                <br>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script src="/script/address.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+    <!-- remove coupon -->
+    <script>
+        document.getElementById('removeCouponBtn').addEventListener('click', async () => {
+            window.location.href = '/checkout';
+        })
+    </script>
+
+    <!-- add coupon code -->
+    <script>
+        document.getElementById('applyCouponBtn').addEventListener('click', async () => {
+            const couponCode = document.getElementById('couponCode').value;
+            const grandTotalElement = document.getElementById('grandTotal');
+            const couponAmount = document.getElementById('couponAmount');
+            const checkoutTotalElement = document.getElementById('checkoutTotal');
+
+            const totalAmount = parseFloat(grandTotalElement.textContent.replace('₹', ''));
+            const couponMessage = document.getElementById('couponMessage');
+
+            try {
+                const response = await fetch('/applyCoupon', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ couponCode, totalAmount })
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+
+                    couponMessage.textContent = data.success || 'Coupon applied successfully';
+                    couponMessage.style.color = 'green';
+                    couponAmount.textContent = `₹${data.discountAmount}`;
+                    checkoutTotalElement.textContent = `₹${data.newTotal}`;
+                    document.getElementById('removeCouponBtn').style.display ='block'
+                    document.getElementById('applyCouponBtn').style.display ='none'
+                    console.log('value is getting:', data)
+                } else {
+                    console.log('response is not correct')
+                    couponMessage.textContent = data.error;
+                    couponMessage.style.color = 'red';
+                }
+              
+
+            } catch (error) {
+                couponMessage.textContent = error.message;
+                couponMessage.style.color = 'red';
+            }
+        });
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Get all address radio buttons
+    const addressRadios = document.querySelectorAll('input[name="address"]');
+    
+    // Remove any existing "Deliver Here" labels
+    const existingLabels = document.querySelectorAll('.deliver-here-label');
+    existingLabels.forEach(label => label.remove());
+    
+    // Add "Deliver Here" label to each address item
+    addressRadios.forEach(radio => {
+        const addressItem = radio.closest('.list-group-item');
+        const editButton = addressItem.querySelector('.editAddressBtn');
+        
+        // Create container for address actions
+        const actionsContainer = document.createElement('div');
+        actionsContainer.className = 'address-actions';
+        
+        // Create "Deliver Here" label
+        const deliverLabel = document.createElement('span');
+        deliverLabel.className = 'deliver-here-label';
+        deliverLabel.textContent = 'Deliver Here';
+        
+        // Move edit button and add deliver label to actions container
+        if (editButton) {
+            editButton.parentNode.insertBefore(actionsContainer, editButton);
+            actionsContainer.appendChild(deliverLabel);
+            actionsContainer.appendChild(editButton);
+        }
+        
+        // Update radio change handler
+        radio.addEventListener('change', function() {
+            // Hide all "Deliver Here" labels
+            document.querySelectorAll('.deliver-here-label').forEach(label => {
+                label.style.display = 'none';
+            });
+            
+            // Show "Deliver Here" label for selected address
+            if (this.checked) {
+                const selectedLabel = this.closest('.list-group-item').querySelector('.deliver-here-label');
+                if (selectedLabel) {
+                    selectedLabel.style.display = 'inline-block';
+                }
+            }
+        });
+        
+        // Show "Deliver Here" label if address is already selected
+        if (radio.checked) {
+            deliverLabel.style.display = 'inline-block';
+        }
+    });
+});
+
+    </script>
+
+    <!-- add mobile number -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            let mobileNumber = '<%= userData.mobileNumber %>';
+            let addNumberButton = document.getElementById('addNumber');
+
+            if (mobileNumber) {
+                addNumberButton.style.display = 'none';
+            } else {
+                addNumberButton.style.display = 'block';
+            }
+
+
+            document.getElementById('addNumber').addEventListener('click', async function (event) {
+                event.preventDefault();
+                let hiddenItem = document.getElementById('hiddenItem')
+                let mobileInput = document.getElementById('mobile')
+
+                if (hiddenItem.style.display === 'none') {
+                    hiddenItem.style.display = 'block'
+                } else {
+                    hiddenItem.style.display = 'none';
+                    let mobile = mobileInput.value
+                    if (mobile.length < 10 || mobile.length > 10) {
+                        document.getElementById('message').textContent = 'mobile number should contains 10 numbers'
+                    } else {
+
+                        try {
+                            const response = fetch('/checkout/mobile', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-type': 'application/json',
+                                },
+                                body: JSON.stringify({ mobile })
+
+                            }).then(response => {
+                                if (!response.ok) {
+                                    throw new Error('Network response was not ok');
+                                }
+                                return response.json();
+                            })
+                                .then(data => {
+                                    console.log('Response data:', data);
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Success!',
+                                        text: data.success || 'Operation successful',
+                                        showConfirmButton: false,
+                                        timer: 1500
+                                    });
+                                    document.getElementById('num').textContent = data.mobile
+                                    document.getElementById('addNumber').style.display = 'none';
+                                })
+
+                        } catch (error) {
+                            console.error('Error:', error);
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: 'An error occurred while adding the mobile number',
+                                confirmButtonText: 'OK'
+                            });
+                        }
+
+                    }
+
+
+                }
+            });
+        })
+    </script>
+
+    <!-- add and edit address controlling script -->
+    <!-- <script>
+        document.addEventListener('DOMContentLoaded', function () {
+
+            const addressFormContainer = document.getElementById('addressFormContainer');
+            const addressForm = document.getElementById('addressForm');
+            const addressList = document.getElementById('addressList');
+            const addAddressBtn = document.querySelectorAll('.addAddressBtn');
+            const editAddressBtns = document.querySelectorAll('.editAddressBtn');
+            const cancelButton = document.getElementById('cancelButton');
+            const addressIdField = document.getElementById('addressId');
+
+            // Show address form for adding a new address
+            if (addAddressBtn) {
+                addAddressBtn.forEach(button => {
+                    button.addEventListener('click', function (event) {
+                        event.preventDefault();
+                        addressForm.action = '/checkout/address';
+                        addressForm.reset();
+                        addressIdField.value = '';
+                        addressFormContainer.style.display = 'block';
+                    });
+                });
+            } else {
+                console.error('addAddressBtn not found.');
+            }
+
+            // Show address form for editing an existing address
+            if (editAddressBtns) {
+                editAddressBtns.forEach(button => {
+                    button.addEventListener('click', function () {
+                        const address = JSON.parse(this.getAttribute('data-address'));
+                        addressForm.action = '/checkout/address/edit';
+                        addressIdField.value = address._id;
+                        document.getElementById('street').value = address.street;
+                        document.getElementById('city').value = address.city;
+                        document.getElementById('state').value = address.state;
+                        document.getElementById('country').value = address.country;
+                        document.getElementById('pinCode').value = address.pinCode;
+                        addressFormContainer.style.display = 'block';
+                    });
+                });
+            } else {
+                console.error('editAddressBtns not found.');
+            }
+
+            // Hide address form
+            cancelButton.addEventListener('click', function () {
+                addressFormContainer.style.display = 'none';
+            });
+
+            // Handle form submission
+            addressForm.addEventListener('submit', async function (event) {
+                event.preventDefault();
+                if (!validateAddress()) {
+                    return;
+                }
+                const formData = new FormData(addressForm);
+                const action = addressForm.action;
+                try {
+                    const response = await fetch(action, {
+                        method: 'POST',
+                        body: formData
+                    });
+                    if (response.ok) {
+                        const data = await response.json();
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: data.message || (addressIdField.value ? 'Address edited successfully!' : 'Address added successfully!')
+                        });
+                        addressFormContainer.style.display = 'none';
+                        console.log('success data:', data);
+
+                        const newAddress = data.address; 
+                        if (addressIdField.value) {
+                            // Edit existing address
+                            window.location.reload()
+                            const addressIndex = editAddressBtns[0].getAttribute('data-index'); 
+                            const addressItem = document.querySelector(`li[data-index="${addressIndex}"]`);
+                            addressItem.innerHTML = `
+                            <input class="pixel-radio d-flex justify-content-between align-items-center" type="radio" id="addr_${addressIndex}" name="address" value="${newAddress._id}">
+                            <label for="addr_${newAddress._id}">Address ${addressIndex + 1}:</label>
+                            <p>
+                                ${newAddress.street}, ${newAddress.city}, ${newAddress.state},
+                                ${newAddress.country}, ${newAddress.pinCode}
+                            </p>
+                            <button type="button" id="editAddress" class="btn btn-outline-secondary text-dark editAddressBtn" data-index="${addressIndex}" data-address='${JSON.stringify(newAddress)}'>Edit Address</button>
+                        `;
+                        
+                        } else {
+                            // Add new address
+                            window.location.reload()
+                            const newIndex = addressList.children.length;
+                            const newAddressItem = document.createElement('li');
+                            newAddressItem.className = 'list-group-item';
+                            newAddressItem.setAttribute('data-index', newIndex);
+                            newAddressItem.innerHTML = `
+                            <input class="pixel-radio d-flex justify-content-between align-items-center" type="radio" id="addr_${newIndex}" name="address" value="${newAddress._id}">
+                            <label for="addr_${newAddress._id}">Address ${newIndex}:</label>
+                            <p>
+                                ${newAddress.street}, ${newAddress.city}, ${newAddress.state},
+                                ${newAddress.country}, ${newAddress.pinCode}
+                            </p>
+                            <button id="editAddress" type="button" class="btn btn-outline-secondary text-dark editAddressBtn" data-index="${newIndex}" data-address='${JSON.stringify(newAddress)}'>Edit Address</button>
+                        `;
+                            addressList.appendChild(newAddressItem);
+                        }
+                    } else {
+                        const data = await response.json();
+                        console.log('error message:', data);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: data.error || 'Form submission failed.'
+                        });
+                    }
+                } catch (error) {
+                    console.log('error occurred in catch:', error.message);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Form submission failed. Please try again.'
+                    });
+                }
+            });
+        });
+
+    </script> -->
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const addressFormContainer = document.getElementById('addressFormContainer');
+            const addressForm = document.getElementById('addressForm');
+            const addressList = document.getElementById('addressList');
+            const addAddressBtn = document.querySelectorAll('.addAddressBtn');
+            const editAddressBtns = document.querySelectorAll('.editAddressBtn');
+            const cancelButton = document.getElementById('cancelButton');
+            const addressIdField = document.getElementById('addressId');
+    
+            // Show address form for adding a new address
+            if (addAddressBtn) {
+                addAddressBtn.forEach(button => {
+                    button.addEventListener('click', function (event) {
+                        event.preventDefault();
+                        addressForm.action = '/checkout/address';
+                        addressForm.reset();
+                        addressIdField.value = '';
+                        addressFormContainer.style.display = 'block';
+                    });
+                });
+            }
+    
+            // Show address form for editing an existing address
+            if (editAddressBtns) {
+                editAddressBtns.forEach(button => {
+                    button.addEventListener('click', function () {
+                        const address = JSON.parse(this.getAttribute('data-address'));
+                        addressForm.action = '/checkout/address/edit';
+                        addressIdField.value = address._id;
+                        document.getElementById('street').value = address.street;
+                        document.getElementById('city').value = address.city;
+                        document.getElementById('state').value = address.state;
+                        document.getElementById('country').value = address.country;
+                        document.getElementById('pinCode').value = address.pinCode;
+                        addressFormContainer.style.display = 'block';
+                    });
+                });
+            }
+    
+            // Hide address form
+            cancelButton.addEventListener('click', function () {
+                addressFormContainer.style.display = 'none';
+            });
+    
+            // Handle form submission
+            addressForm.addEventListener('submit', async function (event) {
+                event.preventDefault();
+    
+                // Validate address fields
+                if (!validateAddress()) {
+                    return;
+                }
+    
+                const formData = new FormData(addressForm);
+                const action = addressForm.action;
+    
+                try {
+                    const response = await fetch(action, {
+                        method: 'POST',
+                        body: formData
+                    });
+    
+                    if (response.ok) {
+                        const data = await response.json();
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: data.message || (addressIdField.value ? 'Address updated successfully!' : 'Address added successfully!'),
+                            showConfirmButton: false,
+                            timer: 1500
+                        }).then(() => {
+                            window.location.reload(); // Reload the page to reflect changes
+                        });
+                    } else {
+                        const data = await response.json();
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: data.error || 'Failed to save address. Please try again.'
+                        });
+                    }
+                } catch (error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'An error occurred. Please try again.'
+                    });
+                }
+            });
+    
+            // Address validation function
+            function validateAddress() {
+                const street = document.getElementById('street').value.trim();
+                const city = document.getElementById('city').value.trim();
+                const state = document.getElementById('state').value.trim();
+                const country = document.getElementById('country').value.trim();
+                const pinCode = document.getElementById('pinCode').value.trim();
+    
+                if (!street || !city || !state || !country || !pinCode) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Validation Error',
+                        text: 'All fields are required.'
+                    });
+                    return false;
+                }
+    
+                if (pinCode.length !== 6 || isNaN(pinCode)) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Validation Error',
+                        text: 'Pin code must be a 6-digit number.'
+                    });
+                    return false;
+                }
+    
+                return true;
+            }
+        });
+    </script>
+    <!-- place order -->
+    <script>
+        document.addEventListener('DOMContentLoaded', async function () {
+            const submitOrderBtn = document.getElementById('submitOrderBtn');
+
+            submitOrderBtn.addEventListener('click', async function (event) {
+                event.preventDefault();
+
+                const mobileNumber = document.getElementById('num').textContent.trim();
+                const listItemElement = document.querySelector('.list-group-item');
+                const userName = listItemElement.getAttribute('data-name');
+
+                const selectedAddress = document.querySelector('input[name="address"]:checked');
+                const addressId = selectedAddress ? selectedAddress.value : null;
+
+                const selectedPaymentMethod = document.querySelector('input[name="paymentMethod"]:checked');
+                const paymentMethod = selectedPaymentMethod ? selectedPaymentMethod.value : null;
+
+                const totalgrandTotal= document.getElementById('grandTotal');
+                const grandTotal = parseFloat(totalgrandTotal.textContent.replace('₹', '').trim());
+                const totalcouponAmount = document.getElementById('couponAmount');
+                const couponAmount = parseFloat(totalcouponAmount.textContent.replace('₹', '').trim());
+
+                const totalAmountElement = document.getElementById('checkoutTotal');
+                const totalAmount = parseFloat(totalAmountElement.textContent.replace('₹', '').trim());
+
+                const cartItemElement = document.getElementById('cartItemId');
+
+                if (cartItemElement) {
+                    const cartItemID = cartItemElement.getAttribute('data-cart-item-id');
+
+                    if (cartItemID) {
+                        const orderData = {
+                            mobileNumber,
+                            addressId,
+                            paymentMethod,
+                            cartItemID,
+                            totalAmount,
+                            userName,
+                            grandTotal,
+                            couponAmount
+                        };
+
+                        try {
+                            const response = await fetch('/checkout/order', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify(orderData)
+                            });
+
+                            if (response.ok) {
+                                const result = await response.json();
+
+                                if (paymentMethod === 'Wallet') {
+                                    if (result.walletPaymentStatus === 'success') {
+                                        Swal.fire({
+                                            icon: 'success',
+                                            title: 'Payment Successful',
+                                            text: 'Your payment was successful.'
+                                        }).then(() => {
+                                            window.location.href = '/confirmation';
+                                        });
+                                    }
+                                    else {
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'Payment Error',
+                                            text: 'Insufficient wallet balance or payment error.'
+                                        });
+                                    }
+
+                                } else if (result.razorpayOrderId) {
+                                    console.log('result in razorpay:', result.razorpayOrderId,)
+
+                                    openRazorpayCheckout(result.razorpayOrderId, totalAmount, '<%= razorpayKeyId %>', '<%= userData.mobileNumber %>', orderData, cartItemID);
+
+                                } else {
+                                    console.log('error in response ')
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Success',
+                                        text: result.success || 'Order placed successfully'
+                                    });
+                                    window.location.href = '/confirmation';
+                                }
+
+                            } else {
+                                const result = await response.json();
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: result.error || 'Order placing encountered an error'
+                                });
+                            }
+                        } catch (error) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'Order submission failed. Please try again.'
+                            });
+                        }
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'No cart items found.'
+                        });
+                    }
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'No cart items found.'
+                    });
+                }
+            });
+
+       
+        
+function openRazorpayCheckout(orderId, amount, razorpayKeyId, mobileNumber, orderData, cartItemID) {
+    console.log(`hiting here`);
+    const numericAmount = parseFloat(amount);
+    let paymentData = {  // Define paymentData in the outer scope
+        orderId: orderId,
+        paymentId: '',
+        razorpayOrderId: '',
+        amount: numericAmount,
+        mobileNumber: mobileNumber,
+        cartItemID: cartItemID,
+        orderData: orderData
+    };
+
+    const options = {
+        key: `${razorpayKeyId}`,
+        amount: numericAmount * 100,
+        currency: 'INR',
+        name: 'LONE WOLF',
+        description: 'Order Payment',
+        image: '/images/newPhoto.jpg',
+        order_id: orderId,
+        handler: async function (response) {
+            if (response.razorpay_payment_id) {
+                paymentData.paymentId = response.razorpay_payment_id;
+                paymentData.razorpayOrderId = response.razorpay_order_id;
+                try {
+                    const res = await fetch('/checkout/payment', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(paymentData),
+                    });
+                    const data = await res.json();
+                    if (res.ok) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Payment Successful',
+                            text: 'Your payment was successful.'
+                        }).then(() => {
+                            window.location.href = '/confirmation';
+                        });
+                    } else {
+                        console.log('Payment successful API sending error');
+                    }
+                } catch (error) {
+                    console.error('Error confirming payment:', error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Payment Error',
+                        text: 'Payment confirmation failed.'
+                    });
+                }
+            } else {
+                console.log('Failed Razorpay');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Payment Error',
+                    text: response.error.description || 'Payment failed or was canceled.'
+                }).then(() => {
+                    window.location.href = '/orders';
+                });
+            }
+        },
+        prefill: {
+            name: '',
+            email: '',
+            contact: `${mobileNumber}`
+        },
+        theme: {
+            color: '#3399cc'
+        }
+    };
+
+    const rzp = new Razorpay(options);
+
+    rzp.on('payment.failed', async function (response) {
+        if (paymentData) {
+            console.log('Payment data exists');
+            try {
+                await fetch('/checkout/failedPayment', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(paymentData),
+                });
+                console.log('Failed payment data sent to the server');
+            } catch (error) {
+                console.error('Error sending failed payment data:', error);
+            }
+        } else {
+            console.log('Payment data does not exist');
+        }
+        // Redirect to failed payment page
+        window.location.href = '/failed/payment';
+    });
+
+    rzp.open();
+}
+
+})
+        </script>
+
+   
+    <%- include('../layouts/user/footer') %>

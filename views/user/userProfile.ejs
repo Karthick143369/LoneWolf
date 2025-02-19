@@ -1,0 +1,451 @@
+<%- include('../layouts/user/header',{title:"LoneWolf"}) %>
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+    .profile-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+
+    .profile-header {
+        background: #DDD0C8;
+        height: 120px;
+        position: relative;
+    }
+
+    .profile-image-container {
+        position: relative;
+        width: 150px;
+        height: 150px;
+        margin-top: -75px;
+        margin-left: 30px;
+    }
+
+    .profile-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 4px solid white;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .edit-image-btn {
+        position: absolute;
+        bottom: 5px;
+        right: 5px;
+        background: white;
+        border-radius: 50%;
+        padding: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        border: none;
+    }
+
+    .profile-info {
+        padding: 30px;
+    }
+
+    .form-group label {
+        font-weight: 600;
+        color: #555;
+    }
+
+    .recent-orders {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+    }
+
+    .order-item {
+        border: 1px solid #eee;
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 15px;
+        transition: all 0.3s ease;
+    }
+
+    .order-item:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-edit-profile {
+        background: #323232;
+        color: white;
+        padding: 8px 25px;
+        border-radius: 25px;
+        border: none;
+        transition: all 0.3s ease;
+    }
+
+    .btn-edit-profile:hover {
+        background: #0e1013;
+        color: white;
+    }
+</style>
+
+
+<%- include('../layouts/user/header', { title: "LoneWolf" }) %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Addresses</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            display: flex;
+            background: #f8f5f3;
+        }
+
+        .sidebar {
+            width: 280px;
+            background: #323232;
+            padding: 20px;
+            min-height: 100vh;
+            color: #DDD0C8;
+        }
+
+        .profile-section {
+            padding: 20px 0;
+            border-bottom: 1px solid #DDD0C8;
+            margin-bottom: 20px;
+        }
+
+        .profile-pic {
+            width: 60px;
+            height: 60px;
+            background: #DDD0C8;
+            border-radius: 50%;
+            margin-bottom: 15px;
+        }
+
+        .nav-item {
+            padding: 15px 0;
+            color: #DDD0C8;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item:hover {
+            background: rgba(221, 208, 200, 0.1);
+            border-radius: 8px;
+            padding-left: 10px;
+        }
+
+        .nav-item.active {
+            background: #DDD0C8;
+            color: #323232;
+            border-radius: 8px;
+            padding-left: 10px;
+        }
+
+        .sub-nav-item {
+            padding: 12px 0 12px 35px;
+            color: #DDD0C8;
+            text-decoration: none;
+            display: block;
+            transition: all 0.3s ease;
+        }
+
+        .sub-nav-item:hover {
+            background: rgba(221, 208, 200, 0.1);
+        }
+
+        .sub-nav-item.active {
+            color: #DDD0C8;
+            font-weight: bold;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 40px;
+            background: #f8f5f3;
+        }
+
+        .add-address {
+            padding: 20px;
+            background: #DDD0C8;
+            border: none;
+            border-radius: 12px;
+            color: #323232;
+            cursor: pointer;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .add-address:hover {
+            background: #c9bdb5;
+            transform: translateY(-2px);
+        }
+
+        .address-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            position: relative;
+            border: 1px solid #DDD0C8;
+            transition: all 0.3s ease;
+        }
+
+        .address-card:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .address-type {
+            background: #DDD0C8;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            color: #323232;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+
+        .address-details {
+            margin-top: 15px;
+            color: #323232;
+            line-height: 1.6;
+        }
+
+        .menu-dots {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .menu-dots:hover {
+            background: #DDD0C8;
+        }
+
+        .address-menu {
+            position: absolute;
+            top: 60px;
+            right: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border: 1px solid #DDD0C8;
+            overflow: hidden;
+        }
+
+        .address-menu button {
+            display: block;
+            width: 100%;
+            padding: 12px 20px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            text-align: left;
+            color: #323232;
+            transition: all 0.3s ease;
+        }
+
+        .address-menu button:hover {
+            background: #DDD0C8;
+        }
+
+        h1 {
+            color: #323232;
+            margin-bottom: 30px;
+            font-size: 32px;
+        }
+
+        .phone {
+            color: #666;
+            margin-left: 10px;
+        }
+
+        .no-address {
+            text-align: center;
+            color: #666;
+            padding: 40px;
+            background: white;
+            border-radius: 12px;
+            border: 2px dashed #DDD0C8;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="profile-section">
+            <div class="profile-pic"></div>
+            <div>Hello,</div>
+            <div><strong><%= userData.name %></strong></div>
+        </div>
+    
+        <a href="/orders" class="nav-item">
+            <span>📦</span>
+            MY ORDERS
+        </a>
+        <a href="/wallet" class="nav-item">
+            <span>📁</span>
+            My Wallet
+        </a>
+    
+        <div class="nav-item ">
+            <span>👤</span>
+            ACCOUNT SETTINGS
+        </div>
+        <a href="/profile" class="nav-item active">Profile Information</a>
+        <!-- <a href="/manage-addresses" class="sub-nav-item active">Manage Addresses</a> -->
+    
+        <div class="nav-item">
+            <span>📱</span>
+            MY STUFF
+        </div>
+        <a href="/coupons" class="sub-nav-item">My Coupons</a>
+    </div>
+
+<div class="container mt-5 mb-5">
+    <div class="row">
+        <!-- Main Profile Card -->
+        <div class="col-md-8">
+            <div class="profile-card">
+                <div class="profile-header"></div>
+                
+                <!-- Profile Image and Basic Info -->
+                <div class="profile-image-container">
+                    <img src="<%= userData && userData.profileImage ? '/images/userProfile/'+userData.profileImage : '/images/male.png' %>"
+                        alt="profile-image" id="profile-image" class="profile-image">
+                    <button class="edit-image-btn" id="edit-image-btn">
+                        <i class="fas fa-camera"></i>
+                    </button>
+                </div>
+
+                <!-- User Details Section -->
+                <div class="profile-info" id="userDetails">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div>
+                            <h3 class="mb-1"><%= userData.name %></h3>
+                            <p class="text-muted mb-0"><%= userData.email %></p>
+                        </div>
+                        <button class="btn btn-edit-profile" id="editProfileBtn">Edit Profile</button>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p class="mb-2"><strong>Gender:</strong> <%= userData.gender %></p>
+                        </div>
+                        <div class="col-md-6">
+                            <p class="mb-2"><strong>Mobile:</strong> <%= userData.mobileNumber %></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Edit Profile Form -->
+                <div class="profile-info" id="editProfileForm" style="display:none;">
+                    <form action="/profile/<%= userId %>" method="post" enctype="multipart/form-data" onsubmit="return validateUser()">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Name</label>
+                                    <input type="text" class="form-control" name="name" value="<%= userData.name %>">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Email</label>
+                                    <input type="email" class="form-control" name="email" value="<%= userData.email %>">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Mobile Number</label>
+                                    <input type="text" class="form-control" name="mobileNumber" value="<%= userData.mobileNumber %>">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Gender</label>
+                                    <select class="form-control" name="gender">
+                                        <option value="male" <%= userData.gender === 'male' ? 'selected' : '' %>>Male</option>
+                                        <option value="female" <%= userData.gender === 'female' ? 'selected' : '' %>>Female</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="file" name="profileImage" class="d-none" id="profileImageInput" onchange="previewImage(event)">
+                        <div class="text-right mt-3">
+                            <button type="submit" class="btn btn-edit-profile">Save Changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Orders Card -->
+        <div class="col-md-4">
+            <div class="recent-orders">
+                <h4 class="mb-4">Recent Orders</h4>
+                <div class="order-item">
+                    <div class="d-flex align-items-center">
+                        <img src="/api/placeholder/50/50" alt="Product" class="rounded mr-3">
+                        <div>
+                            <h6 class="mb-1">Designer Bag</h6>
+                            <p class="text-muted mb-0">₹599/-</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="order-item">
+                    <div class="d-flex align-items-center">
+                        <img src="/api/placeholder/50/50" alt="Product" class="rounded mr-3">
+                        <div>
+                            <h6 class="mb-1">Designer Bag</h6>
+                            <p class="text-muted mb-0">₹599/-</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Scripts -->
+<script src="https://kit.fontawesome.com/your-font-awesome-kit.js"></script>
+<script>
+    document.getElementById('editProfileBtn').addEventListener('click', function() {
+        document.getElementById('userDetails').style.display = 'none';
+        document.getElementById('editProfileForm').style.display = 'block';
+    });
+
+    document.getElementById('edit-image-btn').addEventListener('click', function() {
+        document.getElementById('profileImageInput').click();
+    });
+
+    function previewImage(event) {
+        const reader = new FileReader();
+        reader.onload = function() {
+            const output = document.getElementById('profile-image');
+            output.src = reader.result;
+        }
+        reader.readAsDataURL(event.target.files[0]);
+    }
+</script>

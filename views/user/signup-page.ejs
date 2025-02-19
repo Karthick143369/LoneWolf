@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <link rel="icon" type="image/png" href="images/icons/favicon.png"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f0f0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .signup-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.05);
+            width: 100%;
+            max-width: 400px;
+            padding: 2.5rem;
+        }
+        .form-control {
+            background-color: #f8f9fa;
+            border: none;
+            padding: 0.8rem 1rem;
+            margin-bottom: 1rem;
+        }
+        .form-control:focus {
+            background-color: #f8f9fa;
+            box-shadow: none;
+            border-color: #dee2e6;
+        }
+        .btn-signup {
+            background-color: #ff4444;
+            color: white;
+            border: none;
+            padding: 0.8rem;
+            width: 100%;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+        }
+        .btn-signup:hover {
+            background-color: #ff3333;
+            color: white;
+        }
+        .login-link {
+            color: #ff4444;
+            text-decoration: none;
+        }
+        .login-link:hover {
+            color: #ff3333;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container ">
+        <div class="row justify-content-center ">
+            <div class="col-12 text-center">
+
+                <div class="signup-card mx-auto ">
+                    <h4 class="mb-4 text-uppercase">Sign up</h4>
+                    <!-- Error handling -->
+                    <div id="errorMessage" class="text-danger" style="text-align: center; font-size: 1rem; margin: 15px 15px;" >
+                        <!-- <strong>Warning:</strong> -->
+                    </div>
+                    <span  id="messageShow" class=" text-danger"></span>
+                    <% if (locals.message) { %>
+                        <span class=" text-danger">
+                            <%= message %>
+                        </span>
+                        <% } %>
+                            <% if (typeof errors !=='undefined' && errors.length> 0) { %>
+                                <ul style="font-size: 1rem;">
+                                    <% errors.forEach(error=> { %>
+                                        <li class=" text-danger">
+                                            <h6><%= error.msg %></h6>
+                                        </li>
+                                        <% }) %>
+                                </ul>
+                     <% } %>
+                    <!-- Signup Form -->
+                    <form action="/signup" method="post"
+                        id="contactForm">
+                        <!-- Name Input -->
+                        <div class="mb-3">
+                            <input type="text" 
+                                   class="form-control" 
+                                   placeholder="Username"
+                                   name="name"
+                                   id="name">
+                        </div>
+
+                        <!-- Email Input -->
+                        <div class="mb-3">
+                            <input type="email" 
+                                   class="form-control" 
+                                   placeholder="Email address"
+                                   name="email"
+                                   id="email"
+                                   >
+                        </div>
+
+                        <!-- Password Input -->
+                        <div class="mb-3">
+                            <input type="password" 
+                                   class="form-control" 
+                                   placeholder="Password"
+                                   name="password"
+                                   id="password"
+                                   >
+                        </div>
+
+                        <!-- Confirm Password -->
+                        <div class="mb-3">
+                            <input type="password" 
+                                   class="form-control" 
+                                   placeholder="Confirm Password"
+                                   name="passwordConfirm"
+                                   id="passwordConfirm"
+                                   >
+                        </div>
+                        <!-- <div class="col-md-12 form-group">
+                            <input type="text" class="form-control" id="referralOffer"
+                                name="referralOffer" placeholder="Referal Code (Optional)"
+                                onfocus="this.placeholder = ''"
+                                onblur="this.placeholder = 'Referal Code (Optional)'" >
+                        </div> -->
+                        <!-- Sign Up Button -->
+                        <div class="d-grid gap-2 my-1">
+                            <button type="submit" 
+                                    class="btn btn-danger w-100 ">
+                                Sign up
+                            </button>
+                        </div>
+
+                        <span class="mb-1">OR</span>
+                        
+                        <div class="text-center my-1">
+                            
+                            <a href="/auth/google" type="submit" class=" text-decoration-none bg-primary w-100 py-2 d-flex justify-content-center align-items-center border-0 text-white rounded shadow-lg gap-2  ">
+                                <span class="google-ico">
+                                    <img src="https://cdn1.iconfinder.com/data/icons/google-s-logo/150/Google_Icons-09-512.png" alt="" width="30" height="auto"
+                                    >                   
+                                </span>
+                                Sign in with Google
+                            </a>
+                          
+                        </div>
+                        <!-- Login Link -->
+                        <div class="text-center mt-2">
+                            <span class="text-muted
+                            ">Already you have an account? <a href="/login-page" class="">Sign in</a></span>
+                            
+                        </div>
+                        
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- <script>
+        
+        let submitForm = document.getElementById('RegisterForm')
+        submitForm.addEventListener('submit',async(event)=>{
+        event.preventDefault()
+        let name =document.getElementById('name').value
+        let email =document.getElementById('email').value
+        let password =document.getElementById('password').value
+        console.log(`------${name,email,password}`);
+            try {
+                
+        // const response = await fetch("/register", {
+        const response = await fetch("/signup", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name,
+            email,
+            password,
+            passwordConfirm,
+          }),
+        });
+        console.log(response);
+        if (response.ok) {
+          window.location.href = "/";
+        } else {
+          const errorData = await response.json();
+          const errorMessage = errorData.message || "An error occurred";
+        //   throw new Error(errorMessage);
+        console.log(errorMessage);
+        document.getElementById("errorMessage").innerHTML =errorMessage;
+        }
+      } catch (error) {
+        console.log(error);
+      }
+     });
+
+    </script> -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

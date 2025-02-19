@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="zxx" class="no-js">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta charset="UTF-8">
+    <title><%= title %></title>
+    
+    <!-- Base Styles -->
+    <link rel="stylesheet" href="/css/bootstrap.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --header-height: 80px;
+            --primary-color: #DDD0C8;
+            --accent-color: #e67e22;
+            --text-color: #ecf0f1;
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            padding-top: var(--header-height);
+        }
+
+        .header {
+            background: var(--primary-color);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            height: var(--header-height);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: var(--transition);
+        }
+
+        .header.scrolled {
+            background: rgba(9, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+        }
+
+        .main-menu-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 100%;
+            padding: 0 1rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            padding: 0.5rem 0;
+        }
+
+        .logo img {
+            height: 50px;
+            width: auto;
+            transition: var(--transition);
+        }
+
+        .menu-desktop {
+            display: flex;
+            align-items: center;
+        }
+
+        .main-menu {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            gap: 1.5rem;
+
+        }
+
+        .main-menu li a {
+            color: #323232;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: var(--transition);
+
+        }
+
+        .main-menu li a:hover {
+            color: var(--accent-color);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .main-menu li.active-menu a {
+            color: var(--accent-color);
+            background: #323232;
+        }
+
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .header-icons {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .header-icons a {
+            color: var(--text-color);
+            text-decoration: none;
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .header-icons a:hover {
+            color: var(--accent-color);
+        }
+
+        .header-icons .icon-badge {
+            position: absolute;
+            top: -8px;
+            right: -12px;
+            background: var(--accent-color);
+            color: white;
+            font-size: 0.75rem;
+            font-weight: bold;
+            padding: 2px 6px;
+            border-radius: 50%;
+        }
+
+        @media (max-width: 1024px) {
+            .main-menu {
+                gap: 1rem;
+            }
+
+            .main-menu li a {
+                padding: 0.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .mobile-menu-toggle {
+                display: block;
+            }
+
+            .menu-desktop {
+                position: absolute;
+                top: var(--header-height);
+                left: 0;
+                width: 100%;
+                background: var(--primary-color);
+                padding: 1rem;
+                transform: translateY(-100%);
+                opacity: 0;
+                visibility: hidden;
+                transition: var(--transition);
+            }
+
+            .menu-desktop.active {
+                transform: translateY(0);
+                opacity: 1;
+                visibility: visible;
+            }
+
+            .main-menu {
+                flex-direction: column;
+                width: 100%;
+                gap: 0.5rem;
+            }
+
+            .main-menu li {
+                width: 100%;
+            }
+
+            .main-menu li a {
+                display: block;
+                padding: 0.75rem 1rem;
+                width: 100%;
+            }
+
+            .header-icons {
+                gap: 1rem;
+            }
+        }
+
+
+
+.cart-count-badge {
+    position: absolute;
+    top: -8px;
+    right: -15px;
+    background-color: #e67e22;
+    color: white;
+    border-radius: 50%;
+    font-size: 0.75rem;
+    min-width: 1.5rem;
+    text-align: center;
+    font-weight: bold;
+    border: 2px solid #fff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <div class="main-menu-container container">
+            <a href="/" class="logo">
+                <img src="/images/icons/lonewolf_logo.png" alt="LoneWolf Logo">
+            </a>
+
+            <button class="mobile-menu-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <div class="menu-desktop">
+                <ul class="main-menu">
+                    <li><a href="/">Home</a></li>
+                    <!-- <li><a href="/about">About</a></li> -->
+                    <li><a href="/profile">Profile</a></li>
+                    <!-- <li class="active-menu"><a href="/cart">Cart</a></li> -->
+                    <!-- <li><a href="/orders">Orders</a></li> -->
+                    <!-- <li><a href="/coupons">Coupons</a></li> -->
+                    <!-- <li><a href="/wishList">Wishlist</a></li> -->
+                    <!-- <li><a href="/wallet">Wallet</a></li> -->
+                </ul>
+            </div>
+
+            <!-- Add to Cart and Wishlist Icons -->
+            <div class="header-icons">
+                <div class="cart-icon-wrapper">
+                    <a href="/cart">
+                        <span class="cart-count-badge" id="cartCountBadge">0</span>
+                        <i class="fa-solid fa-cart-shopping"></i>
+                    </a>
+                </div>
+                <a href="/wishList" class="wishlist-icon">
+                    <i class="fas fa-heart"></i>
+                    <span class="icon-badge" id="wishlist-count">0</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <script>
+        // Mobile menu toggle
+        const menuToggle = document.querySelector('.mobile-menu-toggle');
+        const menuDesktop = document.querySelector('.menu-desktop');
+        
+        menuToggle.addEventListener('click', () => {
+            menuDesktop.classList.toggle('active');
+        });
+
+        // // Header scroll effect
+        // window.addEventListener('scroll', () => {
+        //     const header = document.querySelector('.header');
+        //     if (window.scrollY > 50) {
+        //         header.classList.add('scrolled');
+        //     } else {
+        //         header.classList.remove('scrolled');
+        //     }
+        // });
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.menu-desktop') && !e.target.closest('.mobile-menu-toggle')) {
+                menuDesktop.classList.remove('active');
+            }
+        });
+
+        // Example: Update cart and wishlist counts dynamically
+        const cartCount = document.getElementById('cart-count');
+        const wishlistCount = document.getElementById('wishlist-count');
+
+        // Replace these with actual data from your backend or state management
+        cartCount.textContent = 3; // Example: 3 items in cart
+        wishlistCount.textContent = 5; // Example: 5 items in wishlist
+    </script>
+    <script>
+        // Function to update cart count
+        async function updateCartCount() {
+            try {
+                const response = await fetch('/getCartCount', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+        
+                if (!response.ok) {
+                    throw new Error('Failed to fetch cart count');
+                }
+        
+                const data = await response.json();
+                const cartCountBadge = document.getElementById('cartCountBadge');
+                
+                if (cartCountBadge) {
+                    // Update the badge count
+                    cartCountBadge.textContent = data.count || '0';
+                    
+                    // Show/hide badge based on count
+                    if (data.count && data.count > 0) {
+                        cartCountBadge.style.display = 'block';
+                    } else {
+                        cartCountBadge.style.display = 'none';
+                    }
+                }
+            } catch (error) {
+                console.error('Error updating cart count:', error);
+            }
+        }
+        
+        // Call this function when page loads
+        document.addEventListener('DOMContentLoaded', updateCartCount);
+        
+        // Update cart count after adding/removing items
+        function updateExistingChangeQuantity() {
+            const originalChangeQuantity = window.changeQuantity;
+            window.changeQuantity = async function(productId, change, price) {
+                await originalChangeQuantity(productId, change, price);
+                updateCartCount(); // Update cart count after quantity change
+            };
+        }
+        
+        // Add this to  delete button event listener
+        document.querySelectorAll('.delete-btn').forEach(button => {
+            button.addEventListener('click', async function() {
+                // ...  existing delete logic ...
+                updateCartCount();
+            });
+        });
+        </script>
+</body>
+</html>

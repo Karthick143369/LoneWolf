@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <%- include('../layouts/user/header',{title:"LoneWolf"}) %>
+    <title><%= product.productName %> - Product Details</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+    <style>
+        .card {
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .card:hover {
+            transform: scale(1.05);
+        }
+
+        .zoom-lens {
+            position: absolute;
+            border: 2px solid #000;
+            width: 100px;
+            height: 100px;
+            pointer-events: none;
+            display: none;
+            z-index: 1000;
+        }
+
+        .zoom-result {
+            position: absolute;
+            border: 2px solid #ddd;
+            width: 300px;
+            height: 300px;
+            background-repeat: no-repeat;
+            display: none;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+    <!-- Breadcrumb -->
+    <div class="container">
+        <nav aria-label="breadcrumb" class="my-3">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item"><a href="/category"><%= product.category?.name || 'Category' %></a></li>
+                <li class="breadcrumb-item active" aria-current="page"><%= product.productName %></li>
+            </ol>
+        </nav>
+        <div class="row">
+            <!-- Image Carousel Section -->
+            <div class="col-md-4">
+                <div id="productCarousel" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                        <% product.images.forEach((image, index) => { %>
+                            <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
+                                <img src="<%= image %>" class="d-block w-100 zoomable-image" alt="Product Image">
+                            </div>
+                        <% }); %>
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+            </div>
+        
+            <!-- Product Information Section -->
+            <div class="col-md-6">
+                <h1><%= product.productName %></h1>
+                <p><%= product.Description %></p>
+                <p><strong>Brand:</strong> <%= product.brand?.name %></p>
+                <p><strong>Category:</strong> <%= product.category?.name || 'N/A' %></p>
+                <h3 class="text-success">Rs. <%= product.price.toFixed(2) %></h3>
+                <del><span class="original-price">Rs. 1,999.00</span></del>
+                <span class="text-danger discount">&nbsp;35% off!</span><br/>
+                <span class="gst-product-page">(Incl. of GST)</span>
+        
+                <!-- Ratings -->
+                <div class="ratings mb-3">
+                    <span class="badge bg-warning text-dark">
+                        <%= product.ratings %> ★ ★ ★ ★
+                    </span>
+                    <span class="text-danger scrollToReviews">6 reviews / <span class="scrollToReviews">Write a review</span></span>
+                </div>
+        
+                <!-- Add to Cart Form -->
+                    <input type="hidden" name="productId" value="<%= product._id %>">
+                    <button onclick="addToCart('<%= product?._id %>',1)" class="btn btn-primary" <%= product.stock === 0 ? 'disabled' : '' %>>
+                        Add to Cart
+                    </button>
+        
+                    <% if (product.stock === 0) { %>
+                        <p class="text-danger mt-2">Out of stock</p>
+                    <% } %>
+            </div>
+        </div>
+    
+        <h2 class="mt-5">Similar Products</h2>
+        <div class="row">
+            <% if (similarProducts.length > 0) { %>
+                <% similarProducts.forEach(similarProduct => { %>
+                    <div class="col-md-2 m-3">
+                        <div class="card shadow-sm">
+                            <img src="<%= similarProduct.images[0] %>" class="card-img-top" alt="<%= similarProduct.name %>">
+                            <div class="card-body">
+                                <h5 class="card-title"><%= similarProduct.name %></h5>
+                                <p class="text-success">Rs. <%= similarProduct.price.toFixed(2) %></p>
+                                <a href="/product/<%= similarProduct._id %>" class="btn btn-primary btn-sm">View Details</a>
+                            </div>
+                        </div>
+                    </div>
+                <% }) %>
+            <% } else { %>
+                <p class="text-muted">No similar products available at the moment.</p>
+            <% } %>
+        </div>
+    </div>
+    
+    <script>
+
+const addToCart = async (productId, count = 1) => {
+    try {
+        if (productId) {
+            const response = await fetch('/cart', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ productId, quantity: count })
+            });
+
+            if (response.ok) {
+                // Show success SweetAlert
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: 'Product added to cart successfully!',
+                    confirmButtonText: 'OK'
+                });
+            } else {
+                // Show error SweetAlert if the response is not OK
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Failed to add product to cart. Please try again.',
+                    confirmButtonText: 'OK'
+                });
+            }
+        }
+    } catch (error) {
+        // Show error SweetAlert for exceptions
+        Swal.fire({
+            icon: 'error',
+            title: 'Error!',
+            text: error.message || 'An error occurred. Please try again.',
+            confirmButtonText: 'OK'
+        });
+    }
+};
+
+        document.addEventListener("DOMContentLoaded", function () {
+            let zoomLens, zoomResult;
+
+            function initZoom(imageElement) {
+                if (!imageElement) return;
+
+                // Remove previous zoom elements
+                document.querySelectorAll('.zoom-lens, .zoom-result').forEach(el => el.remove());
+
+                // Create zoom lens and result box
+                zoomLens = document.createElement('div');
+                zoomResult = document.createElement('div');
+                zoomLens.className = 'zoom-lens';
+                zoomResult.className = 'zoom-result';
+
+                document.body.appendChild(zoomLens);
+                document.body.appendChild(zoomResult);
+
+                zoomResult.style.backgroundImage = `url(${imageElement.src})`;
+
+                imageElement.addEventListener('mousemove', (e) => zoom(e, imageElement));
+                imageElement.addEventListener('mouseleave', hideZoom);
+                imageElement.addEventListener('mouseenter', showZoom);
+            }
+
+            function zoom(e, imageElement) {
+                const rect = imageElement.getBoundingClientRect();
+                const lensSize = 100;
+                let x = e.clientX - rect.left;
+                let y = e.clientY - rect.top;
+
+                x = Math.max(0, Math.min(x - lensSize / 2, rect.width - lensSize));
+                y = Math.max(0, Math.min(y - lensSize / 2, rect.height - lensSize));
+
+                zoomLens.style.left = `${rect.left + x}px`;
+                zoomLens.style.top = `${rect.top + y}px`;
+
+                zoomResult.style.backgroundSize = `${rect.width * 2}px ${rect.height * 2}px`;
+                zoomResult.style.backgroundPosition = `-${x * 2}px -${y * 2}px`;
+                zoomResult.style.left = `${rect.right + 20}px`;
+                zoomResult.style.top = `${rect.top}px`;
+            }
+
+            function showZoom() {
+                zoomLens.style.display = 'block';
+                zoomResult.style.display = 'block';
+            }
+
+            function hideZoom() {
+                zoomLens.style.display = 'none';
+                zoomResult.style.display = 'none';
+            }
+
+            // Initialize zoom on first image
+            const activeImage = document.querySelector('.carousel-item.active img');
+            if (activeImage) initZoom(activeImage);
+
+            document.getElementById('productCarousel').addEventListener('slid.bs.carousel', () => {
+                const newActiveImage = document.querySelector('.carousel-item.active img');
+                initZoom(newActiveImage);
+            });
+        });
+    </script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <%- include('../layouts/user/footer') %>
+</body>
+</html>

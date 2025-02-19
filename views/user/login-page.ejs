@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login to Your Account</title>
+    <link rel="icon" type="image/png" href="img/icons/brands/google.png"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f0f0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .login-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+            padding: 2rem;
+        }
+        .google-btn {
+            background-color: #4285f4;
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 0.5rem;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .google-btn:hover {
+            background-color: #357abd;
+            color: white;
+        }
+        .google-icon {
+            background: white;
+            padding: 5px;
+            border-radius: 2px;
+        }
+        .divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 1.5rem 0;
+        }
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid #dee2e6;
+        }
+        .divider span {
+            padding: 0 1rem;
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        .warning-message {
+        display: flex;
+        align-items: center;
+        background-color: #ffe6e6;  /* Light red background for a warning feel */
+        color: #a94442;             /* Dark red text color */
+        border: 1px solid #a94442;  /* Border color matching the text */
+        border-radius: 5px;         /* Rounded corners */
+        padding: 10px 40px;         /* Padding for breathing room */
+        font-size: 20px;            /* Slightly larger font for readability */
+        margin-top: 15px;           /* Spacing from other elements */
+        }
+
+
+        .warning-message strong {
+        margin-right: 5px;          /* Space between icon/text and message */
+        }
+
+        .warning-message::before {
+        content: "⚠️";              /* Optional: add icon before the text */
+        font-size: 18px;            /* Slightly larger icon */
+        margin-right: 10px;        /* Space between icon and text */
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12">
+                <div class="login-card mx-auto">
+                    <h4 class="text-center mb-4">LOGIN TO YOUR ACCOUNT</h4>
+                     <!-- Error handling -->
+                     <div id="errorMessage" class="text-danger" style="text-align: center;font-weight: 900;margin: 15px 15px;" >
+                        <!-- <strong>Warning:</strong> -->
+                    </div>
+                   
+                    <!-- Login Form -->
+                    <form id="LoginForm">
+                        <!-- Registration Link -->
+                       
+
+                        <!-- Email Input -->
+                        <div class="mb-3">
+                            <input type="email" class="form-control bg-light" placeholder="Your registered email" name="email" id="email"  >
+                        </div>
+
+                        <!-- Password Input -->
+                        <div class="mb-3">
+                            <input type="password" class="form-control bg-light" placeholder="Password" name="password"  id="password" >
+                        </div>
+
+                        <!-- Login Button -->
+                        <div class="d-flex justify-content-start align-items-center flex-column gap-2 mb-3  ">
+                            <button type="submit" class="btn btn-danger w-100">
+                                LOGIN
+                                <i class="fas fa-arrow-right ms-2"></i>
+                            </button>
+                            <a class="text-decoration-none  ms-auto" href="/forgotPass">Forgot Password?</a>
+                        </div>
+
+                        
+
+                        
+
+                        <!-- Social Login Section -->
+                        <div class="text-center mb-3">
+                            
+                            <a href="/auth/google" type="submit" class=" text-decoration-none bg-primary w-100 py-2 d-flex justify-content-center align-items-center border-0 text-white rounded shadow-lg gap-2  ">
+                                <span class="google-ico">
+                                    <img src="https://cdn1.iconfinder.com/data/icons/google-s-logo/150/Google_Icons-09-512.png" alt="" width="30" height="auto"
+                                    >                   
+                                </span>
+                                Sign in with Google
+                            </a>
+                          
+                        </div>
+
+                        <div class="text-center mb-3 ">
+                            <small class="text-muted">
+                                DON'T HAVE AN ACCOUNT? 
+                                <a href="/sign-up" class="text-danger text-decoration-none">CLICK HERE TO REGISTER</a>
+                            </small>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        
+        let submitForm = document.getElementById('LoginForm')
+        submitForm.addEventListener('submit',async(event)=>{
+        event.preventDefault()
+        let email =document.getElementById('email').value
+        let password = document.getElementById('password').value
+        console.log(`----${email,password}----`);
+            try {
+        const response = await fetch("/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email,
+            password,
+          }),
+        });
+        console.log(response);
+        if (response.ok) {
+          window.location.href = "/";
+        } else {
+          const errorData = await response.json();
+          const errorMessage = errorData.message || "An error occurred";
+        //   throw new Error(errorMessage);
+        
+        document.getElementById("errorMessage").innerHTML =errorMessage;
+        }
+      } catch (error) {
+        console.log(error);
+      }
+     });
+
+ 
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

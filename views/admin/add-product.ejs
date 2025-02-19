@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Product</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+         .upload-area {
+            border: 2px dashed #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            background: #f8f9fa;
+            cursor: pointer;
+        }
+        .thumbnail-preview {
+            width: 100px;
+            height: 100px;
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin: 5px;
+        }
+        :root {
+            --sidebar-width: 250px;
+        }
+        
+        .sidebar {
+            width: var(--sidebar-width);
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            padding: 1rem;
+            background: white;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+        }
+        
+        .main-content {
+            margin-left: var(--sidebar-width);
+            padding: 2rem;
+        }
+        
+        .nav-item {
+            padding: 0.5rem 1rem;
+            margin-bottom: 0.25rem;
+            border-radius: 4px;
+            color: #666;
+            text-decoration: none;
+            transition: background-color 0.2s;
+        }
+        
+        .nav-item:hover {
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        
+        .nav-item.active {
+            background-color: #f0f0f0;
+            color: #333;
+        }
+        
+        .nav-icon {
+            width: 20px;
+            display: inline-block;
+            margin-right: 10px;
+            opacity: 0.7;
+        }
+        
+        .btn-edit {
+            background-color: #50b5ff;
+            color: white;
+            border: none;
+        }
+        
+        .btn-remove {
+            background-color: #ff5050;
+            color: white;
+            border: none;
+        }
+        
+        .btn-add {
+            background-color: #90ee90;
+            color: white;
+            border: none;
+        }
+        
+        .item-row {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .pagination .page-link {
+            color: #333;
+        }
+        
+        .pagination .active .page-link {
+            background-color: #50b5ff;
+            border-color: #50b5ff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-2 text-white min-vh-100 p-3">
+                <nav class="d-flex flex-column">
+                    <a href="#" class="nav-item">
+                        <span class="nav-icon">📊</span>
+                        Customers
+                    </a>
+                    <a href="#" class="nav-item active">
+                        <span class="nav-icon">📦</span>
+                        Products
+                    </a>
+                    <a href="#" class="nav-item ">
+                        <span class="nav-icon">📁</span>
+                        Categories
+                    </a>
+                    <a href="#" class="nav-item">
+                        <span class="nav-icon">👥</span>
+                        Admins
+                    </a>
+                    <a href="#" class="nav-item">
+                        <span class="nav-icon">👤</span>
+                        Dashboard
+                    </a>
+                    <a href="#" class="nav-item">
+                        <span class="nav-icon">🛍️</span>
+                        Orders
+                    </a>
+                    <a href="#" class="nav-item">
+                        <span class="nav-icon">🏷️</span>
+                        Coupons
+                    </a>
+                    <a href="#" class="nav-item">
+                        <span class="nav-icon">🖼️</span>
+                        Banner
+                    </a>
+                    <a href="#" class="nav-item">
+                        <span class="nav-icon">💳</span>
+                        Payments
+                    </a>
+                    <a href="#" class="nav-item">
+                        <span class="nav-icon">🎁</span>
+                        Offers
+                    </a>
+                    <a href="#" class="nav-item">
+                        <span class="nav-icon">🚪</span>
+                        Logout
+                    </a>
+                </nav>
+            </div>
+
+            <!-- Main content -->
+            <div class="col-md-10 p-4">
+                <!-- Breadcrumb and buttons -->
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+                            <li class="breadcrumb-item"><a href="#">Product</a></li>
+                            <li class="breadcrumb-item active">Add Product</li>
+                        </ol>
+                    </nav>
+                    <div>
+                        <button class="btn btn-primary me-2">Add Product</button>
+                        <button class="btn btn-secondary">Cancel</button>
+                    </div>
+                </div>
+
+                <!-- Add Product Form -->
+                <div class="card">
+                    <div class="card-body">
+                        <form>
+                            <!-- General Information -->
+                            <h5 class="mb-4">General Information</h5>
+                            <div class="mb-4">
+                                <label class="form-label">Product Name</label>
+                                <input type="text" class="form-control" placeholder="Enter product name here...">
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label">Description</label>
+                                <textarea class="form-control" rows="4" placeholder="Enter product description here..."></textarea>
+                            </div>
+
+                            <!-- Media -->
+                            <h5 class="mb-4">Media</h5>
+                            <div class="mb-4">
+                                <label class="form-label">Photos</label>
+                                <div class="upload-area">
+                                    <div class="mb-3">
+                                        <div class="d-flex gap-2 justify-content-center">
+                                            <div class="thumbnail-preview">
+                                                <i class="fas fa-plus text-muted"></i>
+                                            </div>
+                                            <div class="thumbnail-preview">
+                                                <i class="fas fa-plus text-muted"></i>
+                                            </div>
+                                            <div class="thumbnail-preview">
+                                                <i class="fas fa-plus text-muted"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <p class="text-muted mb-0">Drag and drop files here, or click to browse</p>
+                                    <button type="button" class="btn btn-link">Add Image</button>
+                                </div>
+                            </div>
+
+                            <!-- Pricing -->
+                            <h5 class="mb-4">Pricing</h5>
+                            <div class="row mb-4">
+                                <div class="col-md-6">
+                                    <label class="form-label">Base Price</label>
+                                    <input type="text" class="form-control" placeholder="Type base price here...">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Offer Price</label>
+                                    <input type="text" class="form-control" placeholder="Type offer price here...">
+                                </div>
+                            </div>
+
+                            <!-- Variation -->
+                            <h5 class="mb-4">Variation</h5>
+                            <div class="mb-4">
+                                <div class="row align-items-center">
+                                    <div class="col-md-5">
+                                        <label class="form-label">Variation Type</label>
+                                        <input type="text" class="form-control" value="Color" readonly>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <label class="form-label">Variation</label>
+                                        <input type="text" class="form-control" value="Black" readonly>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <button type="button" class="btn btn-link text-danger mt-4">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-light mt-3">
+                                    <i class="fas fa-plus me-2"></i>Add Variant
+                                </button>
+                            </div>
+
+                            <!-- Brand -->
+                            <h5 class="mb-4">Brand</h5>
+                            <div class="mb-4">
+                                <label class="form-label">Product Brand</label>
+                                <select class="form-select">
+                                    <option selected disabled>Select a Brand</option>
+                                </select>
+                            </div>
+
+                            <!-- Category -->
+                            <h5 class="mb-4">Category</h5>
+                            <div class="mb-4">
+                                <label class="form-label">Product Category</label>
+                                <select class="form-select">
+                                    <option selected disabled>Select a category</option>
+                                </select>
+                            </div>
+
+                            <!-- Status -->
+                            <h5 class="mb-4">Status</h5>
+                            <div class="mb-4">
+                                <label class="form-label">Product Status</label>
+                                <select class="form-select">
+                                    <option selected>Draft</option>
+                                    <option>Published</option>
+                                </select>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

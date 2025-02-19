@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Order Management</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #0f172a;
+            --primary-light: #1e293b;
+            --secondary: #3b82f6;
+            --accent: #06b6d4;
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --background: #f8fafc;
+            --surface: #ffffff;
+            --text: #334155;
+            --text-light: #64748b;
+            --border: #e2e8f0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--background);
+            color: var(--text);
+            line-height: 1.5;
+        }
+
+        /* Layout */
+        .dashboard {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            padding: 2rem 1.5rem;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding-bottom: 2rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .brand-logo {
+            width: 40px;
+            height: 40px;
+            background: var(--primary);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+        }
+
+        .brand-name {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .nav-section {
+            margin-bottom: 2rem;
+        }
+
+        .nav-header {
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-light);
+            margin-bottom: 0.75rem;
+            padding-left: 1rem;
+        }
+
+        .nav-items {
+            list-style: none;
+        }
+
+        .nav-item {
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            color: var(--text);
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .nav-link:hover {
+            background: var(--background);
+        }
+
+        .nav-link.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 2rem;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .page-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        /* Search and Filter */
+        .actions {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .search-box {
+            flex: 1;
+            max-width: 400px;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 2.75rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.875rem;
+            background: var(--surface);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+        }
+
+        .filter-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.25rem;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        /* Orders Table */
+        .orders-card {
+            background: var(--surface);
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table th {
+            background: var(--background);
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-light);
+            font-size: 0.875rem;
+        }
+
+        .table td {
+            padding: 1rem;
+            border-top: 1px solid var(--border);
+            font-size: 0.875rem;
+        }
+
+        .product-cell {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .product-image {
+            width: 48px;
+            height: 48px;
+            border-radius: 8px;
+            object-fit: cover;
+            background: var(--background);
+        }
+
+        .status-badge {
+            padding: 0.375rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+        }
+
+        .status-pending {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .status-processing {
+            background: #dbeafe;
+            color: #2563eb;
+        }
+
+        .status-delivered {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        .status-cancelled {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .status-select {
+            padding: 0.5rem;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            font-size: 0.875rem;
+            color: var(--text);
+            width: 140px;
+        }
+
+        .btn-view {
+            padding: 0.5rem 1rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .btn-view:hover {
+            background: var(--primary-light);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="dashboard">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="brand-logo">L</div>
+                <div class="brand-name">LoneWolf</div>
+            </div>
+
+            <nav>
+                <div class="nav-section">
+                    <div class="nav-header">Management</div>
+                    <ul class="nav-items">
+                        <li class="nav-item">
+                            <a href="/admin/dashboard" class="nav-link">
+                                <i class="fas fa-users"></i>
+                                Customers
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/admin/product/productList" class="nav-link">
+                                <i class="fas fa-box"></i>
+                                Products
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/admin/product/orderList" class="nav-link active">
+                                <i class="fas fa-shopping-bag"></i>
+                                Orders
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-header">Promotions</div>
+                    <ul class="nav-items">
+                        <li class="nav-item">
+                            <a href="/admin/coupons" class="nav-link">
+                                <i class="fas fa-ticket-alt"></i>
+                                Coupons
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/admin/product/offerList" class="nav-link">
+                                <i class="fas fa-gift"></i>
+                                Product Offers
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/admin/categoryOffer" class="nav-link">
+                                <i class="fas fa-percentage"></i>
+                                Category Offers
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="header">
+                <h1 class="page-title">Orders</h1>
+            </div>
+
+            <div class="actions">
+                <div class="search-box">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" class="search-input" placeholder="Search orders...">
+                </div>
+                <button class="filter-btn">
+                    <i class="fas fa-filter"></i>
+                    Filter
+                </button>
+            </div>
+
+            <div class="orders-card">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Date</th>
+                                <th>Customer</th>
+                                <th>Total</th>
+                                <th>Payment</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if (order && order?.length > 0) { %>
+                                <% order.forEach(orderItem => { %>
+                                    <% orderItem?.productItems.forEach((product, index) => { %>
+                                        <tr>
+                                            <td>
+                                                <div class="product-cell">
+                                                    <img src="<%= product?.productId?.images[0] %>" alt="Product" class="product-image">
+                                                    <span><%= product?.productName %></span>
+                                                </div>
+                                            </td>
+                                            <td><%= orderItem.dateOrdered.toDateString() %></td>
+                                            <td><%= orderItem.userName %></td>
+                                            <td>$<%= product.total.toFixed(2) %></td>
+                                            <td><%= orderItem.paymentMethod %></td>
+                                            <td>
+                                                <% if (['Return Requested', 'return request accepted', 'return request rejected','Cancelled','product returned'].includes(product.status)) { %>
+                                                    <span class="status-badge status-cancelled">
+                                                        <i class="fas fa-times-circle"></i>
+                                                        <%= product.status %>
+                                                    </span>
+                                                <% } else if(product.status === 'Delivered'){ %>
+                                                    <span class="status-badge status-delivered">
+                                                        <i class="fas fa-check-circle"></i>
+                                                        Delivered
+                                                    </span>
+                                                <% } else { %>
+                                                    <select class="status-select" name="status" 
+                                                        data-order-id="<%= orderItem._id %>"
+                                                        data-product-id="<%= product._id %>" 
+                                                        onchange="updateStatus(this)">
+                                                        <% const statuses=['Pending', 'Processing', 'Shipped', 'Delivered']; %>
+                                                        <% statuses.forEach(status => { %>
+                                                            <option value="<%= status %>" 
+                                                                <%= product.status === status ? 'selected' : '' %>>
+                                                                <%= status %>
+                                                            </option>
+                                                        <% }); %>
+                                                    </select>
+                                                <% } %>
+                                            </td>
+                                            <td>
+                                                <% if (['Return Requested', 'return request accepted', 'return request rejected','Cancelled','product returned'].includes(product.status)) { %>
+                                                    <a href="/admin/product/return/<%= orderItem._id %>/<%= product._id %>" class="btn-view">
+                                                        View Details
+                                                    </a>
+                                                <% } else { %>
+                                                    <a href="/admin/product/view/<%= orderItem._id %>/<%= product._id %>" class="btn-view">
+                                                        View Details
+                                                    </a>
+                                                <% } %>
+                                            </td>
+                                        </tr>
+                                    <% }); %>
+                                <% }); %>
+                            <% } else { %>
+                                <tr>
+                                    <td colspan="7" class="text-center py-4">No orders found.</td>
+                                </tr>
+                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>

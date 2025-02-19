@@ -1,0 +1,77 @@
+
+<div class="col-md-2 profile-sidebar mb-5">
+    <div class="profile-header">
+        <!-- <img src="/images/male.png" alt="Profile Picture" class="profile-thumbnail">    -->
+        <img src= "<%= userData && userData.profileImage ? '/images/userProfile/'+userData.profileImage : '/images/male.png' %>" alt="Profile Picture" class="profile-thumbnail">     
+  
+        <div>
+            <h5>Hello,</h5>      
+            <h5><%= user.toUpperCase()%></h5>
+        </div>
+    </div>
+    <nav class="nav flex-column mt-4">
+        <!-- <a class="nav-link" href="#">MY ORDERS</a> -->
+        <!-- <a class="nav-link " href="#">ACCOUNT SETTINGS</a> -->
+        <nav class="nav flex-column ml-3">
+            <a class="nav-link" href="/user/profile">Profile Edit</a>
+            <a class="nav-link" href="/user/address">Manage Addresses</a>
+            <a class="nav-link" href="/user/password">Change Password</a>
+            <a class="nav-link" href="/user/orders">My Orders</a>
+            <a class="nav-link" href="/user/cart">My Cart</a>
+            <a class="nav-link" href="/user/wishList">Wish List</a>
+            <a class="nav-link" href="/user/wallet">Wallet</a>
+            <a class="nav-link" href="/user/coupons">Coupon List</a>
+        </nav>
+        <!-- <a class="nav-link" href="/user/orders">orders</a> -->
+        <!-- <nav class="nav flex-column ml-3">
+            <a class="nav-link" href="#">Gift Cards</a>
+            <a class="nav-link" href="#">Saved UPI</a>
+            <a class="nav-link" href="#">Saved Cards</a>
+        </nav> -->
+    </nav>
+</div>
+
+<style>
+.profile-thumbnail {
+width: 50px; /* Adjust the width as needed */
+height: 50px; /* Adjust the height as needed */
+border-radius: 50%; /* Makes the image round */
+object-fit: cover; /* Ensures the image covers the entire container */
+}
+
+body {
+	background-color: #f8f9fa;
+}
+.profile-sidebar {
+	padding: 10px;
+	background: #f1d7b9;
+	margin-right: 20px;
+}
+.profile-content {
+	padding: 20px;
+	background: #fff;
+	flex-grow: 1;
+}
+.profile-sidebar .nav-link.active {
+	background-color: #e9ecef;
+}
+.profile-sidebar .nav-link {
+	color: #333;
+}
+.profile-sidebar .nav-link:hover {
+	background-color: #e9ecef;
+}
+.profile-header {
+	display: flex;
+	align-items: center;
+}
+.profile-header img {
+	border-radius: 50%;
+	margin-right: 10px;
+}
+
+</style>
+</body>
+</html>
+
+

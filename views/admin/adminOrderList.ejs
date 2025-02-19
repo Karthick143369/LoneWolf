@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    
+    <style>
+        .product-card {
+            transition: transform 0.2s, box-shadow 0.2s;
+            height: 100%;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .card-img-wrapper {
+            position: relative;
+            padding-top: 75%; /* 4:3 Aspect Ratio */
+            overflow: hidden;
+        }
+
+        .card-img-top {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .offer-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(220, 53, 69, 0.9);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        .offer-details {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        .offer-dates {
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+
+        .price-section {
+            display: flex;
+            align-items: baseline;
+            gap: 0.5rem;
+        }
+
+        .original-price {
+            text-decoration: line-through;
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+
+        .discounted-price {
+            color: #dc3545;
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+
+        .action-buttons {
+            gap: 0.5rem;
+        }
+
+        .page-header {
+            background: linear-gradient(to right, #4a90e2, #67b26f);
+            color: white;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+        }
+    </style>
+
+<style>
+    :root {
+        --primary-color: #2563eb;
+        --secondary-color: #1e40af;
+        --success-color: #059669;
+        --danger-color: #dc2626;
+        --warning-color: #d97706;
+        --info-color: #0891b2;
+        --light-gray: #f3f4f6;
+        --dark-gray: #4b5563;
+        --sidebar-width: 280px;
+    }
+    
+    body {
+        font-family: 'Inter', -apple-system, sans-serif;
+        background-color: #f8fafc;
+    }
+    
+    .sidebar {
+        width: var(--sidebar-width);
+        height: 100vh;
+        position: fixed;
+        left: 0;
+        top: 0;
+        padding: 1.5rem;
+        background: white;
+        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+    }
+    
+
+    
+    .brand {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--primary-color);
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid var(--light-gray);
+    }
+    
+    .nav-item {
+        padding: 0.75rem 1rem;
+        margin-bottom: 0.5rem;
+        border-radius: 8px;
+        color: var(--dark-gray);
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+    }
+    
+    .nav-item:hover {
+        background-color: var(--light-gray);
+        color: var(--primary-color);
+    }
+    
+    .nav-item.active {
+        background-color: var(--primary-color);
+        color: white;
+    }
+    
+    .nav-icon {
+        width: 24px;
+        margin-right: 12px;
+        opacity: 0.9;
+    }
+    
+    .table {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+        margin-top: 1.5rem;
+    }
+    
+    .table thead {
+        background-color: var(--light-gray);
+    }
+    
+    .table th {
+        font-weight: 600;
+        color: var(--dark-gray);
+        padding: 1rem;
+        border-bottom: 2px solid #e5e7eb;
+    }
+    
+    .table td {
+        padding: 1rem;
+        vertical-align: middle;
+    }
+    
+    .status-select {
+        padding: 0.5rem;
+        border-radius: 6px;
+        border: 1px solid #e5e7eb;
+        width: 140px;
+    }
+    
+    .btn-view {
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        padding: 0.5rem 1.5rem;
+        border-radius: 6px;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-view:hover {
+        background-color: var(--secondary-color);
+    }
+    
+    .product-img {
+        width: 50px;
+        height: 50px;
+        border-radius: 8px;
+        object-fit: cover;
+        margin-right: 1rem;
+    }
+    
+    .product-cell {
+        display: flex;
+        align-items: center;
+    }
+    
+    .status-badge {
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.875rem;
+        font-weight: 500;
+    }
+    
+    .status-pending {
+        background-color: #fef3c7;
+        color: var(--warning-color);
+    }
+    
+    .status-processing {
+        background-color: #e0f2fe;
+        color: var(--info-color);
+    }
+    
+    .status-delivered {
+        background-color: #dcfce7;
+        color: var(--success-color);
+    }
+    
+    .status-cancelled {
+        background-color: #fee2e2;
+        color: var(--danger-color);
+    }
+</style>
+</head>
+
+<body>
+    
+<div class="container-fluid p-0">
+    <!-- Sidebar -->
+            <div class="sidebar">
+            <div class="brand">LoneWolf</div>
+            <nav class="d-flex flex-column">
+                <a href="/admin/dashboard" class="nav-item">
+                    <span class="nav-icon">👥</span>
+                    Customers
+                </a>
+                <a href="/admin/product/productList" class="nav-item">
+                    <span class="nav-icon">📦</span>
+                    Products
+                </a>
+                <a href="/admin/category" class="nav-item">
+                    <span class="nav-icon">📁</span>
+                    Categories
+                </a>
+                <a href="/admin/dashboard2" class="nav-item">
+                    <span class="nav-icon">📊</span>
+                    Dashboard
+                </a>
+                <a href="/admin/product/orderList" class="nav-item active">
+                    <span class="nav-icon">🛍️</span>
+                    Orders
+                </a>
+                <a href="/admin/coupons" class="nav-item">
+                    <span class="nav-icon">🏷️</span>
+                    Coupons
+                </a>
+                <a href="/admin/product/offerList" class="nav-item">
+                    <span class="nav-icon">🎁</span>
+                    Product Offers
+                </a>
+                <a href="/admin/categoryOffer" class="nav-item">
+                    <span class="nav-icon">🎁</span>
+                    Category Offers
+                </a>
+                <a href="/admin/logout" class="nav-item">
+                    <span class="nav-icon">🚪</span>
+                    Logout
+                </a>
+            </nav>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content flex-grow-1">
+            <h1 class="mb-4 fw-bold">Order List</h1>
+
+            <div class="table-responsive" style="margin-left: 300px;">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Date</th>
+                            <th>Customer</th>
+                            <th>Total</th>
+                            <th>Payment</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% if (order && order?.length > 0) { %>
+                            <% order.forEach(orderItem => { %>
+                                <% orderItem?.productItems.forEach((product, index) => { %>
+                                    <tr>
+                                        <td>
+                                            <div class="product-cell">
+                                                <img src="<%= product?.productId?.images[0] %>" alt="Product" class="product-img">
+                                                <span class="fw-medium"><%= product?.productName %></span>
+                                            </div>
+                                        </td>
+                                        <td><%= orderItem.dateOrdered.toDateString() %></td>
+                                        <td><%= orderItem.userName %></td>
+                                        <td><i class="fa-solid fa-indian-rupee-sign"></i><%= product.total %></td>
+                                        <td><%= orderItem.paymentMethod %></td>
+                                        <td>
+                                            <% if (['Return Requested', 'return request accepted', 'return request rejected','Cancelled','product returned'].includes(product.status)) { %>
+                                                <span class="status-badge status-cancelled">
+                                                    <%= product.status %>
+                                                </span>
+                                            <% } else if(product.status === 'Delivered'){ %>
+                                                <span class="status-badge status-delivered">Delivered</span>
+                                            <% } else { %>
+                                                <select class="status-select" name="status" 
+                                                    data-order-id="<%= orderItem._id %>"
+                                                    data-product-id="<%= product._id %>" 
+                                                    onchange="updateStatus(this)">
+                                                    <% const statuses=['Pending', 'Processing', 'Shipped', 'Delivered']; %>
+                                                    <% statuses.forEach(status => { %>
+                                                        <option value="<%= status %>" 
+                                                            <%= product.status === status ? 'selected' : '' %>>
+                                                            <%= status %>
+                                                        </option>
+                                                    <% }); %>
+                                                </select>
+                                            <% } %>
+                                        </td>
+                                        <td>
+                                            <% if (['Return Requested', 'return request accepted', 'return request rejected','Cancelled','product returned'].includes(product.status)) { %>
+                                                <a href="/admin/product/return/<%= orderItem._id %>/<%= product._id %>" class="btn btn-view">
+                                                    View Details
+                                                </a>
+                                            <% } else { %>
+                                                <a href="/admin/product/view/<%= orderItem._id %>/<%= product._id %>" class="btn btn-view">
+                                                    View Details
+                                                </a>
+                                            <% } %>
+                                        </td>
+                                    </tr>
+                                <% }); %>
+                            <% }); %>
+                        <% } else { %>
+                            <tr>
+                                <td colspan="7" class="text-center py-4">No orders found.</td>
+                            </tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        function updateStatus(selectElement) {
+            const orderId = selectElement.getAttribute('data-order-id');
+            const productId = selectElement.getAttribute('data-product-id');
+            const status = selectElement.value;
+            
+            fetch('/admin/product/orderStatus', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ orderId, productId, status })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Status Updated!',
+                        text: data.message || 'Order status has been updated successfully',
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
+                    .then(() => {
+                        window.location.reload();
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Update Failed',
+                        text: data.message || 'An error occurred while updating the status',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'An error occurred while updating the status',
+                    confirmButtonText: 'OK'
+                });
+            });
+        }
+    </script>
+</body>
