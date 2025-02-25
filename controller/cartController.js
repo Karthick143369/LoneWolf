@@ -27,6 +27,7 @@ const cartPage = async (req, res) => {
 
                     cartItems.grandTotal = grandTotalAmount;
                     await cartItems.save();
+                    ///asdfghj
 
                     res.render('user/cart', { cartItems, grandTotalAmount });
                 } else {
