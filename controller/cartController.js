@@ -121,41 +121,50 @@ const addToCart = async (req, res) => {
           const userId = req.session.userId;
   
           const productItem = await productModel.findById(productId);
+          console.log(`issue 1`);
 
           
           //is Activetrue
           if (!productItem) {
-              res.status(500).render('404error');
+            return  res.status(500).render('404error');
           } else {
               
               
   
               // Check if the product exists in the cart already
-            const productExists = await helpers.cartProductData(userId, productId);
+            const productExists = await helpers.cartProductExists(userId, productId);
               let cart = await cartModel.findOne({ userId });
+              console.log(`issue 2`);
+              console.log(productExists);
+
               if (productExists) {
-                  console.log(productExists);
-        
+                console.log(productExists);
                 const productIndex = cart.products.findIndex((product) => product.productId==productId)
                 console.log(productIndex,cart.products);
-                cart.products[productIndex].quantity += 1;
+                  cart.products[productIndex].quantity += 1;
+                  console.log(`issue 3`);
                 await cart.save()
                  
-                await cart.save();
-                res.redirect('/cart');
+                // await cart.save();
+                  res.redirect('/cart');
+
               } else {
-                  const productIndex = cart.products.findIndex((product) => product.productId==productId)
-                  console.log(productIndex,cart.products);
+                  console.log('log arrived');
+                 
                   if (cart) {
+                    const productIndex = cart.products.findIndex((product) => product.productId==productId)
+                    console.log(productIndex,cart.products);
                       if (productIndex !=-1) {
-                          
                           cart.products[productIndex].quantity = 1;
+                          console.log(`issue 4`);
+
                           await cart.save()
                                               
                           
                       } else {
-                          cart.products.push({ productId, quantity: 1, total: productExists.total, offerPrice: productExists.offerPrice });
+                          cart.products.push({ productId, quantity: 1, total: productExists.total, offerPrice: productExists.offerPrice  });
                           cart.grandTotal += 1;
+                          console.log(`issue 5`);
                           await cart.save();
                           
                       }
@@ -164,8 +173,11 @@ const addToCart = async (req, res) => {
                       cart = new cartModel({
                           userId: userId,
                           products: [{ productId, quantity: 1, total:productItem?.price , offerPrice: 1 }],
-                          grandTotal: productItem?.price
+                          grandTotal: productItem?.price,
+                          maxStock :productItem?.stock
                       });
+                      console.log(`issue 6`);
+
                       await cart.save();
                   }
                   res.redirect('/cart');
