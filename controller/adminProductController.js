@@ -1,14 +1,7 @@
-const express = require('express');
-const fs = require('fs');
-const sharp = require('sharp');
-const path = require('path');
 const productModel = require('../models/product');
 const categoryModel = require('../models/category');
 const brandModel = require('../models/brand')
-const upload = require('../helpers/productMulter');
-const { check, validationResult } = require('express-validator');
-const { Mongoose, default: mongoose } = require('mongoose');
-const { Buffer } = require('buffer');
+
 
 
 
@@ -110,9 +103,9 @@ const addProductAction = async (req, res) => {
 
       
       await newProduct.save();
-      res.json({ success: true }); 
+    //   res.json({ success: true }); 
       console.log(`${'Saved'}`);
-    //   res.redirect('/admin/product/productList');
+      res.redirect('/admin/product/productList');
     } catch (error) {
         console.error("Error saving product:", error.message);
         res.status(500).json({ message: 'An error occurred while adding the product.' });
@@ -239,35 +232,59 @@ const updateProduct = async (req, res) => {
     }
 };
 
-
-// deleting the images in product editing
 const deleteImage = async (req, res) => {
+    console.log(`hit deleteImage`);
     try {
-        const { id } = req.params;
-        const { image } = req.body;
+        const { id } = req.params; // Product ID
+        const { image } = req.body; // Image path to delete
 
+        // Validate input
+        if (!id || !image) {
+            return res.status(400).json({ success: false, message: 'Product ID and image path are required' });
+        }
+
+        // Find the product by ID
         const product = await productModel.findById(id);
-
         if (!product) {
-            return res.status(404).send('Product not found');
+            return res.status(404).json({ success: false, message: 'Product not found' });
         }
 
-        const imageIndex = product.images.indexOf(image);
+        // Normalize the image path (remove leading/trailing slashes)
+        const normalizedImagePath = image.replace(/^\/|\/$/g, '');
+        console.log(normalizedImagePath);
+
+        // Check if the image exists in the product's images array
+        const imageIndex = product.images.findIndex(img => img.replace(/^\/|\/$/g, '') === normalizedImagePath);
         if (imageIndex === -1) {
-            return res.status(400).send('Image not found');
+            return res.status(400).json({ success: false, message: 'Image not found in product' });
         }
-       
+
+        // Remove the image from the array
         product.images.splice(imageIndex, 1);
+console.log(`saved`);
+        // Save the updated product
         await product.save();
 
-        res.status(200).send('Image deleted successfully');
+        // Optionally: Delete the image file from the server's file system or storage
+        const fs = require('fs');
+        const path = require('path');
+        const imagePath = path.join(__dirname, '..', 'public', image); 
+        console.log(imagePath);
+        console.log(imagePath);
+        if (fs.existsSync(imagePath)) {
+            fs.unlinkSync(imagePath); // Delete the file
+            console.log('Image file deleted:', imagePath);
+        } else {
+            console.log('Image file not found:', imagePath);
+        }
+
+        // Send success response
+        res.status(200).json({ success: true, message: 'Image deleted successfully' });
     } catch (error) {
-        console.log('error occured in deleting image:', error)
-        res.status(500).send('Server error');
+        console.error('Error occurred in deleting image:', error);
+        res.status(500).json({ success: false, message: 'Server error' });
     }
-}
-
-
+};
 
 module.exports = {
     addProduct,

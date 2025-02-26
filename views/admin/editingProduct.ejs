@@ -248,38 +248,46 @@
     </script>
 
     <!-- delete the image  -->
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-        // Bind event listeners to delete buttons
-        document.querySelectorAll('.delete-image-btn').forEach(button => {
-            button.addEventListener('click', async function() {
-                const imageIndex = parseInt(this.getAttribute('data-image-index')); // Get the index from the button
-                const images = document.querySelectorAll('.current-image-container img'); // Get all images
-                const imageSrc = images[imageIndex].src; // Get the src of the image at the index
-    
-                try {
-                    const response = await fetch(`/admin/product/deleteImage/<%= product._id %>`, {
-                        method: 'DELETE',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({ image: imageSrc.replace(window.location.origin, '') })
-                    });
-    
-                    if (response.ok) {
-                        location.reload(); // Reload page after successful deletion
-                    } else {
-                        alert('Failed to delete image');
-                    }
-                } catch (err) {
-                    console.error('Error:', err);
-                    alert('An unexpected error occurred');
+
+<script>
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Bind event listeners to delete buttons
+    document.querySelectorAll('.delete-image-btn').forEach(button => {
+        button.addEventListener('click', async function () {
+            const imageIndex = parseInt(this.getAttribute('data-image-index')); // Get the index from the button
+            const images = document.querySelectorAll('.current-image-container img'); // Get all images
+            const imageSrc = images[imageIndex].src; // Get the src of the image at the index
+
+            // Extract the relative path of the image (remove the domain part)
+            const relativeImagePath = new URL(imageSrc).pathname;
+            console.log('Image path being sent:', relativeImagePath); // Debugging log
+
+            try {
+                const response = await fetch(`/admin/product/deleteImage/<%= product._id %>`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ image: relativeImagePath }) // Send the relative path
+                });
+
+                if (response.ok) {
+                    location.reload(); // Reload page after successful deletion
+                } else {
+                    const errorData = await response.json(); // Parse the response as JSON
+                    console.error('Failed to delete image:', errorData); // Debugging log
+                    alert(`Failed to delete image: ${errorData.message}`);
                 }
-            });
+            } catch (err) {
+                console.error('Error:', err); // Debugging log
+                alert('An unexpected error occurred');
+            }
         });
     });
-    
-    </script>
+});
+
+</script>
 </body>
 
 </html>
